@@ -1,4 +1,4 @@
-package client.asta_lsi2.controller;
+package client.asta_lsi2.controllers;
 
 public class DashboardController {
 }
