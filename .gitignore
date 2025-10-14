@@ -32,5 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 
-src/main/resources/application-secret.properties
-application.properties
+application-secret.properties
