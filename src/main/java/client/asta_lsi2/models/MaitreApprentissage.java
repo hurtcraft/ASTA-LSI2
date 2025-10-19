@@ -30,17 +30,19 @@ public class MaitreApprentissage {
     @JoinColumn(name = "posteId")
     private Poste poste;
 
+    private String password;
     public MaitreApprentissage() {
     }
 
     public MaitreApprentissage(Long maId, String maNom, String maPrenom,
-                               String maEmail, String maTelephone, String maRemarque) {
+                               String maEmail, String maTelephone, String maRemarque,String password) {
         this.maId = maId;
         this.maNom = maNom;
         this.maPrenom = maPrenom;
         this.maEmail = maEmail;
         this.maTelephone = maTelephone;
         this.maRemarque = maRemarque;
+        this.password = password;
     }
 
     @Override

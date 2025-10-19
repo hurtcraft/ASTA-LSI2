@@ -41,17 +41,19 @@ public class Apprenti {
     @Column(length = 20)
     private String telephone;
 
-    // Constructeur complet (utile pour des tests ou des insertions manuelles)
+    @Column(nullable = false)
+    private String password;
+
     public Apprenti(Long apprentiId, String apprentiName, String apprentiPrenom,
-                    String apprentiEmail, String telephone) {
+                    String apprentiEmail, String telephone,String password) {
         this.apprentiId = apprentiId;
         this.apprentiName = apprentiName;
         this.apprentiPrenom = apprentiPrenom;
         this.apprentiEmail = apprentiEmail;
         this.telephone = telephone;
+        this.password = password;
     }
 
-    // Constructeur vide obligatoire pour JPA
     public Apprenti() {
     }
 

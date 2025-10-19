@@ -8,8 +8,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class AstaLsi2Application {
 
     public static void main(String[] args) {
-        System.out.println("tata");
-        Apprenti a=new Apprenti();
         SpringApplication.run(AstaLsi2Application.class, args);
     }
 

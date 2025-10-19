@@ -1,5 +1,6 @@
 package client.asta_lsi2.repository;
 
+import aj.org.objectweb.asm.commons.Remapper;
 import client.asta_lsi2.models.Apprenti;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,4 +19,5 @@ public interface ApprentiRepository extends JpaRepository<Apprenti, Long> {
 	Optional<Apprenti>	findByApprentiName(String apprentiName);
 
 
+	Optional<Apprenti> findByApprentiEmail(String username);
 }
