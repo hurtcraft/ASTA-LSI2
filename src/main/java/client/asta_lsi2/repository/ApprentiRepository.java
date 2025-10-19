@@ -2,11 +2,15 @@ package client.asta_lsi2.repository;
 
 import client.asta_lsi2.models.Apprenti;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
-import java.util.Optional;
+import java.time.Year;
+import java.util.List;
 
-@Repository
 public interface ApprentiRepository extends JpaRepository<Apprenti, Long> {
-    Optional<Apprenti> findByUsername(String username);
+
+	@Query("SELECT a FROM Apprenti a WHERE a.apprenti_year = :year")
+	List<Apprenti> findByYear(@Param("year") Year year);
+
 }

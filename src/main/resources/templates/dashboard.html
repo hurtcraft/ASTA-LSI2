@@ -1,10 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Tableau de bord</title>
+    <style>
+        .empty-message { color: red; font-weight: bold; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+        th { background: #f2f2f2; }
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/static/css/base.css}" />
 </head>
 <body>
+    <h1>Tableau de bord - Année <span th:text="${currentYear}"></span></h1>
+
+    <div th:if="${apprentis.empty}">
+        <p class="empty-message">La liste est vide. Ajoutez au moins un apprenti</p>
+        <form th:action="@{/dashboard/seed}" method="get">
+            <button type="submit">Ajouter un apprenti automatiquement</button>
+        </form>
+    </div>
+
+    <div th:unless="${apprentis.empty}">
+        <h2>Apprentis suivis</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Email</th>
+                    <th>Téléphone</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="apprenti : ${apprentis}">
+                    <td th:text="${apprenti.apprenti_id}"></td>
+                    <td th:text="${apprenti.apprenti_name}"></td>
+                    <td th:text="${apprenti.apprenti_prenom}"></td>
+                    <td th:text="${apprenti.apprenti_email}"></td>
+                    <td th:text="${apprenti.telephone}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
 </body>
 </html>
