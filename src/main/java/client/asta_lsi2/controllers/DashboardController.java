@@ -21,6 +21,8 @@ public class DashboardController {
 		Year currentYear = Year.now();
 		model.addAttribute("currentYear", currentYear);
 		model.addAttribute("apprentis", apprentiService.listApprentisForYear(currentYear));
+
+		System.out.println(apprentiService.listApprentisForYear(currentYear));
 		return "dashboard";
 	}
 
@@ -29,11 +31,11 @@ public class DashboardController {
 		Year currentYear = Year.now();
 		// create a basic sample apprenti
 		client.asta_lsi2.models.Apprenti sample = new client.asta_lsi2.models.Apprenti();
-		sample.setApprenti_name("NomSample");
-		sample.setApprenti_prenom("PrenomSample");
-		sample.setApprenti_email("sample" + System.currentTimeMillis() + "@example.com");
+		sample.setApprentiName("NomSample");
+		sample.setApprentiPrenom("PrenomSample");
+		sample.setApprentiEmail("sample" + System.currentTimeMillis() + "@example.com");
 		sample.setTelephone("0000000000");
-		sample.setApprenti_year(currentYear);
+		sample.setApprentiYear(currentYear);
 		apprentiService.save(sample);
 		return "redirect:/dashboard";
 	}

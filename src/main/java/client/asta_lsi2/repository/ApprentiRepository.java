@@ -10,7 +10,9 @@ import java.util.List;
 
 public interface ApprentiRepository extends JpaRepository<Apprenti, Long> {
 
-	@Query("SELECT a FROM Apprenti a WHERE a.apprenti_year = :year")
-	List<Apprenti> findByYear(@Param("year") Year year);
-
+	//@Query("SELECT a FROM Apprenti a WHERE a.apprentiYear = :year")
+	//List<Apprenti> findByYear(@Param("year") Year year);
+	List<Apprenti> findByApprentiYear(Year year);
+	Apprenti findByApprentiId(Long apprentiId);
+	Apprenti findByApprentiName(String apprentiName);
 }

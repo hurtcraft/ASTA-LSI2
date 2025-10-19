@@ -6,52 +6,62 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.Year;
-
+import jakarta.persistence.*;
+import lombok.Data;
+import java.time.Year;
 
 @Data
 @Entity
-
 public class Apprenti {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long apprenti_id;
+    private Long apprentiId;
 
     @Column(nullable = false, length = 100)
-    private String apprenti_name;
-    @Column(nullable = false, length = 100)
-    private String apprenti_prenom;
-    @Column(nullable = false,unique = true, length = 100)
-    private String apprenti_email;
+    private String apprentiName;
 
     @Column(nullable = false, length = 100)
-    private Year apprenti_year;
+    private String apprentiPrenom;
+
+    @Column(nullable = false, unique = true, length = 100)
+    private String apprentiEmail;
+
+    @Column(nullable = false)
+    private Year apprentiYear;
 
     @ManyToOne
-    @JoinColumn(name = "majeur_id")
+    @JoinColumn(name = "majeurId")
     private Majeur majeur;
 
     @ManyToOne
-    @JoinColumn(name = "programme_id")
+    @JoinColumn(name = "programmeId")
     private Programme programme;
+
+    @Column(length = 20)
     private String telephone;
 
-
-    public Apprenti(long apprenti_id, String apprenti_name, String apprenti_prenom, String apprenti_email, String telephone) {
-        this.apprenti_id = apprenti_id;
-        this.apprenti_name = apprenti_name;
-        this.apprenti_prenom = apprenti_prenom;
-        this.apprenti_email = apprenti_email;
+    // Constructeur complet (utile pour des tests ou des insertions manuelles)
+    public Apprenti(Long apprentiId, String apprentiName, String apprentiPrenom,
+                    String apprentiEmail, String telephone) {
+        this.apprentiId = apprentiId;
+        this.apprentiName = apprentiName;
+        this.apprentiPrenom = apprentiPrenom;
+        this.apprentiEmail = apprentiEmail;
         this.telephone = telephone;
     }
-    public Apprenti() {}
+
+    // Constructeur vide obligatoire pour JPA
+    public Apprenti() {
+    }
 
     @Override
     public String toString() {
         return "Apprenti{" +
-                "apprenti_id=" + apprenti_id +
-                ", apprenti_name='" + apprenti_name + '\'' +
-                ", apprenti_prenom='" + apprenti_prenom + '\'' +
-                ", apprenti_email='" + apprenti_email + '\'' +
+                "apprentiId=" + apprentiId +
+                ", apprentiName='" + apprentiName + '\'' +
+                ", apprentiPrenom='" + apprentiPrenom + '\'' +
+                ", apprentiEmail='" + apprentiEmail + '\'' +
                 ", telephone='" + telephone + '\'' +
                 '}';
     }

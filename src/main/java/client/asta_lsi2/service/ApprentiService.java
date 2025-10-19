@@ -17,7 +17,7 @@ public class ApprentiService {
 	}
 
 	public List<Apprenti> listApprentisForYear(Year year) {
-		return apprentiRepository.findByYear(year);
+		return apprentiRepository.findByApprentiYear(year);
 	}
 
 	public Apprenti save(Apprenti apprenti) {
