@@ -11,7 +11,7 @@ import java.util.Date;
 public class Soutenance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long soutenance_id;
+    private Long soutenanceId;
 
     @Column(nullable = false)
     private Date date;

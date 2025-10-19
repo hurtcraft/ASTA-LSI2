@@ -9,25 +9,26 @@ public class Mission {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long mission_id;
+    private Long missionId;
 
     @Column(nullable = false, length = 512)
-    private String mot_cle;
+    private String motCle;
 
     @Column(nullable = false, length = 100)
-    private String metier_cible;
+    private String metierCible;
+
     @Column(nullable = false, length = 512)
     private String commentaires;
 
     @ManyToOne
-    @JoinColumn(name="apprenti_id")
+    @JoinColumn(name = "apprentiId")
     private Apprenti apprenti;
+
     @ManyToOne
-    @JoinColumn(name="entreprise_id")
+    @JoinColumn(name = "entrepriseId")
     private Entreprise entreprise;
+
     @ManyToOne
-    @JoinColumn(name="MA_id")
-    private MaitreApprentissage maitre_apprentissage;
-
-
+    @JoinColumn(name = "maId")
+    private MaitreApprentissage maitreApprentissage;
 }

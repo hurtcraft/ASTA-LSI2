@@ -6,44 +6,52 @@ import lombok.Data;
 @Entity
 @Data
 public class MaitreApprentissage {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long MA_id;
+    private Long maId;
 
     @Column(nullable = false, length = 100)
-    private String MA_nom;
+    private String maNom;
+
     @Column(nullable = false, length = 100)
-    private String MA_prenom;
-    @Column(nullable = false, length = 100)
-    private String MA_email;
-    private String MA_telephone;
-    @Column(nullable = false, length = 1024)
-    private String remarque;
+    private String maPrenom;
+
+    @Column(nullable = false, unique = true, length = 100)
+    private String maEmail;
+
+    @Column(length = 20)
+    private String maTelephone;
+
+    @Column(length = 1024)
+    private String maRemarque;
 
     @ManyToOne
-    @JoinColumn(name = "poste_id")
+    @JoinColumn(name = "posteId")
     private Poste poste;
 
-    public MaitreApprentissage() {}
-    public MaitreApprentissage(Long MA_id, String MA_nom, String MA_prenom, String MA_email, String MA_telephone, String remarque) {
-        this.MA_id = MA_id;
-        this.MA_nom = MA_nom;
-        this.MA_prenom = MA_prenom;
-        this.MA_email = MA_email;
-        this.MA_telephone = MA_telephone;
-        this.remarque = remarque;
+    public MaitreApprentissage() {
     }
 
+    public MaitreApprentissage(Long maId, String maNom, String maPrenom,
+                               String maEmail, String maTelephone, String maRemarque) {
+        this.maId = maId;
+        this.maNom = maNom;
+        this.maPrenom = maPrenom;
+        this.maEmail = maEmail;
+        this.maTelephone = maTelephone;
+        this.maRemarque = maRemarque;
+    }
 
     @Override
     public String toString() {
         return "MaitreApprentissage{" +
-                "MA_id=" + MA_id +
-                ", MA_nom='" + MA_nom + '\'' +
-                ", MA_prenom='" + MA_prenom + '\'' +
-                ", MA_email='" + MA_email + '\'' +
-                ", MA_telephone='" + MA_telephone + '\'' +
-                ", remarque='" + remarque + '\'' +
+                "maId=" + maId +
+                ", maNom='" + maNom + '\'' +
+                ", maPrenom='" + maPrenom + '\'' +
+                ", maEmail='" + maEmail + '\'' +
+                ", maTelephone='" + maTelephone + '\'' +
+                ", maRemarque='" + maRemarque + '\'' +
                 '}';
     }
 }

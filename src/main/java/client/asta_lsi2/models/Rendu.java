@@ -9,7 +9,7 @@ public class Rendu {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long rendu_id;
+    private Long renduId;
 
     @Column(nullable = false)
     private TypeRendu typeRendu;
@@ -17,7 +17,7 @@ public class Rendu {
     @Column(nullable = false,length = 256)
     private String theme;
 
-    private double note_rendu;
+    private double noteRendu;
 
     @Column(length = 512)
     private String commentaire;

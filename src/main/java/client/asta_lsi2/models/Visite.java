@@ -10,10 +10,10 @@ import java.util.Date;
 public class Visite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long visite_id;
+    private Long visiteId;
 
     @Column(nullable = false)
-    private Date visite_date;
+    private Date visiteDate;
 
     @Column(nullable = false)
     private FormatVisite format;

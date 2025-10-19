@@ -1,4 +1,12 @@
 package client.asta_lsi2.repository;
 
-public class MaitreApprentissageRepository {
+import client.asta_lsi2.models.MaitreApprentissage;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface MaitreApprentissageRepository extends JpaRepository<MaitreApprentissage, Long> {
+    Optional<MaitreApprentissage> findBy(String username);
 }

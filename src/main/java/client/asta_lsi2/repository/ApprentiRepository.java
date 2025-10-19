@@ -7,12 +7,15 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.Year;
 import java.util.List;
+import java.util.Optional;
 
 public interface ApprentiRepository extends JpaRepository<Apprenti, Long> {
 
 	//@Query("SELECT a FROM Apprenti a WHERE a.apprentiYear = :year")
 	//List<Apprenti> findByYear(@Param("year") Year year);
 	List<Apprenti> findByApprentiYear(Year year);
-	Apprenti findByApprentiId(Long apprentiId);
-	Apprenti findByApprentiName(String apprentiName);
+	Optional<Apprenti> findByApprentiId(Long apprentiId);
+	Optional<Apprenti>	findByApprentiName(String apprentiName);
+
+
 }

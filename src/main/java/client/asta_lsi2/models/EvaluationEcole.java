@@ -8,7 +8,7 @@ import lombok.Data;
 public class EvaluationEcole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long evaluation_ecole_id;
+    private Long evaluationEcoleId;
 
     @OneToOne
     @JoinColumn(name = "rendu_id")
@@ -25,5 +25,5 @@ public class EvaluationEcole {
     private String remarque;
 
     @Column(length = 512)
-    private String feedback_enseignant;
+    private String feedbackEnseignant;
 }

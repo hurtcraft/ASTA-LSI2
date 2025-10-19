@@ -8,7 +8,7 @@ import lombok.Data;
 public class Programme {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long programme_id;
+    private Long programmeId;
 
     @Column(nullable = false,unique = true, length = 100)
     private String label;
@@ -16,7 +16,7 @@ public class Programme {
     @Override
     public String toString() {
         return "Programme{" +
-                "programme_id=" + programme_id +
+                "programme_id=" + programmeId +
                 ", label='" + label + '\'' +
                 '}';
     }
