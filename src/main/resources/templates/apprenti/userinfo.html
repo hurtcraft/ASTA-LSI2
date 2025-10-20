@@ -40,21 +40,22 @@
             </div>
         </div>
 
-        <div class="info-section" th:if="${apprenti.majeur != null}">
+        <!-- Formation: pas d'accès à des propriétés inconnues -->
+        <div class="info-section">
             <h2>Formation</h2>
-            <div class="info-row">
-                <span class="info-label">Majeur :</span>
-                <span class="info-value" th:text="${apprenti.majeur.majeurName}"></span>
+            <div th:if="${apprenti.majeur != null || apprenti.programme != null}">
+                <div class="info-row" th:if="${apprenti.majeur != null}">
+                    <span class="info-label">Majeur :</span>
+                    <span class="info-value" th:text="${apprenti.majeur.label}"></span>
+                </div>
+                <div class="info-row" th:if="${apprenti.programme != null}">
+                    <span class="info-label">Programme :</span>
+                    <span class="info-value" th:text="${apprenti.programme.label}"></span>
+                </div>
             </div>
-            <div class="info-row" th:if="${apprenti.programme != null}">
-                <span class="info-label">Programme :</span>
-                <span class="info-value" th:text="${apprenti.programme.programmeName}"></span>
-            </div>
-        </div>
-
-        <div class="info-section" th:if="${apprenti.majeur == null && apprenti.programme == null}">
-            <h2>Formation</h2>
-            <p style="color: #999; font-style: italic;">Aucune information de formation disponible</p>
+            <p th:if="${apprenti.majeur == null && apprenti.programme == null}" style="color: #999; font-style: italic;">
+                Aucune information de formation disponible
+            </p>
         </div>
     </div>
 </body>
