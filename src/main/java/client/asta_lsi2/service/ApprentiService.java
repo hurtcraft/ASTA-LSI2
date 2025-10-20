@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Year;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ApprentiService {
@@ -22,6 +23,10 @@ public class ApprentiService {
 
 	public Apprenti save(Apprenti apprenti) {
 		return apprentiRepository.save(apprenti);
+	}
+
+	public Optional<Apprenti> findById(Long id) {
+		return apprentiRepository.findById(id);
 	}
 
 }
