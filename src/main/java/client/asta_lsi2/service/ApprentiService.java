@@ -37,4 +37,8 @@ public class ApprentiService {
 		apprentiRepository.save(apprenti);
 	}
 
+	public Optional<Apprenti> findById(Long id) {
+		return apprentiRepository.findById(id);
+	}
+
 }
