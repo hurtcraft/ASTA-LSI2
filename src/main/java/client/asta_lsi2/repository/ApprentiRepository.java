@@ -17,7 +17,6 @@ public interface ApprentiRepository extends JpaRepository<Apprenti, Long> {
 	List<Apprenti> findByApprentiYear(Year year);
 	Optional<Apprenti> findByApprentiId(Long apprentiId);
 	Optional<Apprenti>	findByApprentiName(String apprentiName);
-
-
+	boolean existsByApprentiEmail(String email);
 	Optional<Apprenti> findByApprentiEmail(String username);
 }

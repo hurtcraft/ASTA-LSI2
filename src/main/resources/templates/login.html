@@ -1,10 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Connexion</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+        }
+    </style>
+    <link rel="stylesheet" th:href="@{/css/animation.css}">
 </head>
-<body>
+<body class="d-flex align-items-center justify-content-center vh-100 bg-light">
 
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-4 bg-white p-4 rounded shadow">
+            <h1 class="text-center mb-4">Connexion</h1>
+            <form th:action="@{/login}" th:object="${loginForm}" method="post" class="d-flex flex-column gap-3">
+                <input type="text" th:field="*{email}" class="form-control" placeholder="Email" required>
+                <input type="password" th:field="*{password}" class="form-control" placeholder="Mot de passe" required>
+                <button type="submit" class="btn btn-primary w-100">Se connecter</button>
+            </form>
+
+            <hr class="my-4">
+
+            <div class="d-flex flex-column gap-2">
+                <a href="/register/apprenti" class="btn btn-outline-success w-100">S'inscrire comme Apprenti</a>
+                <a href="/register/maitre" class="btn btn-outline-success w-100">S'inscrire comme Maître d'apprentissage</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -5,7 +5,6 @@ import client.asta_lsi2.models.MaitreApprentissage;
 import client.asta_lsi2.models.Role;
 import client.asta_lsi2.repository.ApprentiRepository;
 import client.asta_lsi2.repository.MaitreApprentissageRepository;
-import client.asta_lsi2.security.JwtUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,16 +15,11 @@ import org.springframework.stereotype.Service;
 public class CustomUserDetailsService implements UserDetailsService {
     private final ApprentiRepository apprentiRepo;
     private final MaitreApprentissageRepository maitreRepo;
-    private final JwtUtils jwtUtils;
-    private final PasswordEncoder passwordEncoder;
-    public CustomUserDetailsService(ApprentiRepository apprentiRepo, MaitreApprentissageRepository maitreRepo, JwtUtils jwtUtils, PasswordEncoder passwordEncoder) {
+    public CustomUserDetailsService(ApprentiRepository apprentiRepo, MaitreApprentissageRepository maitreRepo ) {
         this.apprentiRepo = apprentiRepo;
         this.maitreRepo = maitreRepo;
-        this.jwtUtils = jwtUtils;
-        this.passwordEncoder = passwordEncoder;
 
     }
-
     /***
      *
      * @param email email de l'user à charger
@@ -48,22 +42,5 @@ public class CustomUserDetailsService implements UserDetailsService {
                                 .build())
                         .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé")));
     }
-
-    public void saveApprenti(Apprenti apprenti) {
-        apprenti.setPassword(passwordEncoder.encode(apprenti.getPassword()));
-        apprentiRepo.save(apprenti);
-    }
-    public void saveMaitre(MaitreApprentissage maitre) {
-        maitre.setPassword(passwordEncoder.encode(maitre.getPassword()));
-        maitreRepo.save(maitre);
-    }
-
-    public boolean apprentiExists(String email){
-        return apprentiRepo.findByApprentiName(email).isPresent();
-    }
-    public boolean maitreExists(String email){
-        return maitreRepo.findByMaEmail(email).isPresent();
-    }
-
 
 }

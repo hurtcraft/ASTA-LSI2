@@ -1,4 +1,53 @@
 package client.asta_lsi2.controllers;
 
+
+import client.asta_lsi2.models.Apprenti;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
+
+@Controller
+@RequestMapping("/apprenti")
+
 public class ApprentiController {
+
+    private final WebClient webClient; //pointe sur http://localhost:8080/api par défaut
+    public ApprentiController(WebClient webClient) {
+        this.webClient = webClient;
+    }
+
+
+    @GetMapping("/home")
+    public String apprentiHome(Model model, Authentication authentication, HttpServletRequest request) {
+        String jsessionId = null;
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("JSESSIONID".equals(cookie.getName())) {
+                    jsessionId = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        String finalJsessionId = jsessionId;
+        Apprenti apprenti = webClient.get()
+                .uri("/apprenti/getApprentiByEmail/{email}", authentication.getName())
+                .cookies(c -> c.add("JSESSIONID", finalJsessionId))
+                .retrieve()
+                .bodyToMono(Apprenti.class)
+                .block();
+
+        model.addAttribute("apprenti", apprenti);
+        return "apprenti/home";
+    }
 }

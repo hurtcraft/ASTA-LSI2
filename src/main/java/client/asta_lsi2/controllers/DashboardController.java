@@ -22,7 +22,7 @@ public class DashboardController {
         this.customUserDetailsService = customUserDetailsService;
     }
 
-    @GetMapping({"/", "/dashboard"})
+    @GetMapping({ "/dashboard"})
     public String dashboard(Model model) {
         Year currentYear = Year.now();
         model.addAttribute("currentYear", currentYear);
@@ -43,8 +43,8 @@ public class DashboardController {
         sample.setTelephone("0000000000");
         sample.setApprentiYear(currentYear);
         sample.setPassword("password");
-        //apprentiService.save(sample);
-        customUserDetailsService.saveApprenti(sample);// pour chiffrage du mdp
+        apprentiService.save(sample);
+        //customUserDetailsService.saveApprenti(sample);// pour chiffrage du mdp
         return "redirect:/dashboard";
     }
 
