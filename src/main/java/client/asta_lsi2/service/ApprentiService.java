@@ -36,9 +36,17 @@ public class ApprentiService {
 		apprenti.setPassword(passwordEncoder.encode(apprenti.getPassword()));
 		apprentiRepository.save(apprenti);
 	}
+	public List<Apprenti> findByApprentiName(String apprentiName) {
+		return apprentiRepository.findApprentisByApprentiName(apprentiName);
+	}
 
 	public Optional<Apprenti> findById(Long id) {
 		return apprentiRepository.findById(id);
 	}
-
+	public List<Apprenti> findByApprentiEntrepriseRaisonSociale(String raisonSociale) {
+		return apprentiRepository.findApprentisByEntrepriseRaisonSociale(raisonSociale);
+	}
+	public List<Apprenti> findByAnne(int anne){
+		return apprentiRepository.findByApprentiYear(Year.of(anne));
+	}
 }

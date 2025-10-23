@@ -7,7 +7,6 @@
 </head>
 <body>
 
-<!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Espace Maître d'apprentissage</a>
@@ -23,11 +22,27 @@
 <div class="container mt-4">
     <h1>Bienvenue dans votre espace</h1>
 
-    <div th:if="${loginSuccess == true}" class="alert alert-success mt-3">
-        Connexion réussie !
-    </div>
 
-    <p>mettre truc ici</p>
+<!--    <form th:action="@{/maitre/search}" method="get" class="mt-4">-->
+<!--        <div class="input-group mb-3">-->
+<!--            <input type="text" name="name" class="form-control"-->
+<!--                   placeholder="Rechercher un apprenti"-->
+<!--                   th:value="${searchName}">-->
+<!--            <button type="submit" class="btn btn-primary">Rechercher</button>-->
+<!--        </div>-->
+<!--    </form>-->
+
+<!--    <div th:if="${apprentis != null}">-->
+<!--        <h5 th:text="'Résultats pour : ' + ${searchName}"></h5>-->
+<!--        <ul class="list-group">-->
+<!--            <li th:each="apprenti : ${apprentis}" class="list-group-item"-->
+<!--                th:text="${apprenti.apprentiName} + ' (' + ${apprenti.apprentiEmail} + ')'">-->
+<!--            </li>-->
+<!--            <li th:if="${apprentis.size() == 0}" class="list-group-item text-muted">-->
+<!--                Aucun apprenti trouvé.-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--    </div>-->
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

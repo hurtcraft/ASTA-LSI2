@@ -10,7 +10,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/maitre")
@@ -25,25 +28,28 @@ public class MaitreApprentissageController {
 
     @GetMapping("/home")
     public String apprentiHome(Model model, Authentication authentication, HttpServletRequest request) {
-        String jsessionId = null;
-        if (request.getCookies() != null) {
-            for (Cookie cookie : request.getCookies()) {
-                if ("JSESSIONID".equals(cookie.getName())) {
-                    jsessionId = cookie.getValue();
-                    break;
-                }
-            }
-        }
+        String jsessionId = getJSessionId(request);
 
-        String finalJsessionId = jsessionId;
         MaitreApprentissage maitre = webClient.get()
                 .uri("/maitre/getMaitreByEmail/{email}", authentication.getName())
-                .cookies(c -> c.add("JSESSIONID", finalJsessionId))
+                .cookies(c -> c.add("JSESSIONID", jsessionId))
                 .retrieve()
                 .bodyToMono(MaitreApprentissage.class)
                 .block();
 
         model.addAttribute("maitre", maitre );
         return "maitre/home";
+    }
+
+
+    private String getJSessionId(HttpServletRequest request) {
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("JSESSIONID".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
     }
 }

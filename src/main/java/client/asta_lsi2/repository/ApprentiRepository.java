@@ -12,11 +12,11 @@ import java.util.Optional;
 
 public interface ApprentiRepository extends JpaRepository<Apprenti, Long> {
 
-	//@Query("SELECT a FROM Apprenti a WHERE a.apprentiYear = :year")
-	//List<Apprenti> findByYear(@Param("year") Year year);
+
 	List<Apprenti> findByApprentiYear(Year year);
 	Optional<Apprenti> findByApprentiId(Long apprentiId);
-	Optional<Apprenti>	findByApprentiName(String apprentiName);
 	boolean existsByApprentiEmail(String email);
 	Optional<Apprenti> findByApprentiEmail(String username);
+	List<Apprenti> findApprentisByApprentiName(String name);
+	List<Apprenti> findApprentisByEntrepriseRaisonSociale(String entrepriseRaisonSociale);
 }

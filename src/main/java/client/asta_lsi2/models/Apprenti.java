@@ -35,6 +35,10 @@ public class Apprenti {
     private Majeur majeur;
 
     @ManyToOne
+    @JoinColumn(name="entrepriseId")
+    private Entreprise entreprise;
+
+    @ManyToOne
     @JoinColumn(name = "programmeId")
     private Programme programme;
 
