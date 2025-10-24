@@ -11,7 +11,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -26,6 +28,8 @@ public class ApprentiController {
     public ApprentiController(WebClient webClient) {
         this.webClient = webClient;
     }
+
+
 
 
     @GetMapping("/home")
@@ -50,5 +54,33 @@ public class ApprentiController {
 
         model.addAttribute("apprenti", apprenti);
         return "apprenti/home";
+    }
+
+    @DeleteMapping("/apprenti/deleteapprenti/{id}")
+    public String deleteApprenti(@PathVariable Long id, Authentication authentication, HttpServletRequest request) {
+        String jsessionId = null;
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("JSESSIONID".equals(cookie.getName())) {
+                    jsessionId = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        String finalJsessionId = jsessionId;
+        HttpStatusCode statusCode = webClient.delete()
+                .uri("/deleteApprenti/{id}", id)
+                .cookies(c -> c.add("JSESSIONID", finalJsessionId))
+                .retrieve()
+                .toBodilessEntity()
+                .map(response -> response.getStatusCode())
+                .block();
+
+        if (statusCode == HttpStatus.NO_CONTENT) {
+            return "redirect:/logout";
+        } else {
+            return "redirect:/apprenti/home?error=true";
+        }
     }
 }
