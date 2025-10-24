@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="rows">
+    <tr th:each="apprenti : ${apprentis}" class="clickable-row"
+        th:attr="data-id=${apprenti.apprentiId},data-name=${apprenti.apprentiName},data-prenom=${apprenti.apprentiPrenom},data-email=${apprenti.apprentiEmail},data-telephone=${apprenti.telephone},data-year=${apprenti.apprentiYear}">
+        <td th:text="${apprenti.apprentiId}"></td>
+        <td th:text="${apprenti.apprentiName}"></td>
+        <td th:text="${apprenti.apprentiPrenom}"></td>
+        <td th:text="${apprenti.programme != null ? apprenti.programme.label : 'N/A'}"></td>
+        <td th:text="${apprenti.apprentiEmail}"></td>
+        <td th:text="${apprenti.telephone}"></td>
+        <td>
+            <a class="btn btn-sm btn-outline-primary" th:href="@{'/apprenti/edit/' + ${apprenti.apprentiId}}">Éditer</a>
+            <a class="btn btn-sm btn-outline-danger delete-apprenti" th:href="@{'/apprenti/deleteapprenti/' + ${apprenti.apprentiId}}">Supprimer</a>
+        </td>
+    </tr>
+    <tr th:if="${apprentis.empty}">
+        <td colspan="7" class="text-center text-muted">Aucun apprenti trouvé</td>
+    </tr>
+</th:block>
+</body>
+</html>

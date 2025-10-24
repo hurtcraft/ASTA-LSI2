@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="list">
+    <div th:each="apprenti : ${apprentis}" class="suggest-item p-2 border-bottom" style="cursor: pointer;"
+         th:attr="data-id=${apprenti.apprentiId},data-label=${apprenti.apprentiName} + ' ' + ${apprenti.apprentiPrenom}">
+        <strong th:text="${apprenti.apprentiName} + ' ' + ${apprenti.apprentiPrenom}"></strong><br>
+        <small class="text-muted" th:text="${apprenti.apprentiEmail}"></small>
+    </div>
+    <div th:if="${apprentis.empty}" class="p-2 text-muted">Aucune suggestion</div>
+</div>
+</body>
+</html>

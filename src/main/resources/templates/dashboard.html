@@ -23,7 +23,7 @@
 
 <div class="container card-dashboard">
     <div class="card shadow-sm slide-down">
-        <div class="card-body">
+    <div class="card-body" id="dashboardCard" th:attr="data-current-year=${currentYear}">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h3 class="card-title mb-0">Tableau de bord - Année <span th:text="${currentYear}"></span></h3>
                 <div>
@@ -33,8 +33,17 @@
             </div>
 
             <div class="mb-3" th:unless="${apprentis.empty}">
-                <button id="sortAZ" class="btn btn-sm btn-outline-secondary">Trier A-Z</button>
-                <button id="sortZA" class="btn btn-sm btn-outline-secondary ms-2">Trier Z-A</button>
+                <div class="row g-2 align-items-center">
+                    <div class="col-md-6 position-relative">
+                        <input type="text" id="searchInput" class="form-control" placeholder="Rechercher (nom, entreprise, mission, année)" autocomplete="off">
+                        <div id="suggestBox" class="position-absolute bg-white border rounded shadow-sm w-100" style="display:none; top:100%; z-index:1050; max-height:260px; overflow-y:auto;"></div>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <button id="sortAZ" class="btn btn-sm btn-outline-secondary">Trier A-Z</button>
+                        <button id="sortZA" class="btn btn-sm btn-outline-secondary ms-2">Trier Z-A</button>
+                        <button id="clearSearch" class="btn btn-sm btn-outline-danger ms-2" style="display:none;">Réinitialiser</button>
+                    </div>
+                </div>
             </div>
 
             <div th:if="${apprentis.empty}">
@@ -162,7 +171,13 @@
         // Tri dynamique des apprentis
         const sortAZ = document.getElementById('sortAZ');
         const sortZA = document.getElementById('sortZA');
-        const tbody = document.querySelector('table tbody');
+    const tbody = document.querySelector('table tbody');
+    const searchInput = document.getElementById('searchInput');
+    const suggestBox = document.getElementById('suggestBox');
+    const clearBtn = document.getElementById('clearSearch');
+    const dashboardCard = document.getElementById('dashboardCard');
+    const currentYear = (dashboardCard && dashboardCard.getAttribute('data-current-year')) || new Date().getFullYear().toString();
+    let debounceId;
         
         function sortTable(ascending) {
             if (!tbody) return;
@@ -193,6 +208,83 @@
         
         if (sortZA) {
             sortZA.addEventListener('click', () => sortTable(false));
+        }
+
+        // --- Recherche MVC qui appelle les REST via un contrôleur ---
+        async function fetchRows(query) {
+            const url = `/dashboard/search?q=${encodeURIComponent(query||'')}`;
+            const res = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' }});
+            if (!res.ok) throw new Error('search failed');
+            const html = await res.text();
+            tbody.innerHTML = html;
+            stopAnchorPropagation();
+            tbody.querySelectorAll('.clickable-row').forEach(r => r.addEventListener('click', function(){
+                const id = this.getAttribute('data-id');
+                if (!id) return;
+                loadFragment(id);
+                bsModal.show();
+            }));
+            tbody.querySelectorAll('.delete-apprenti').forEach(link => link.addEventListener('click', async function(e){
+                e.preventDefault();
+                const href = this.getAttribute('href');
+                if (!confirm('Confirmer la suppression de cet apprenti ?')) return;
+                const parts = href.split('/');
+                const id = parts[parts.length -1];
+                const res = await fetch('/api/apprenti/deleteApprenti/' + id, { method:'DELETE' });
+                if (res.ok) window.location.reload(); else alert('Erreur ' + res.status);
+            }));
+        }
+
+        async function fetchSuggest(query) {
+            if (!query || query.trim().length < 2) { suggestBox.style.display='none'; return; }
+            const res = await fetch(`/dashboard/suggest?q=${encodeURIComponent(query)}`, { headers:{'X-Requested-With':'XMLHttpRequest'}});
+            if (!res.ok) { suggestBox.style.display='none'; return; }
+            const html = await res.text();
+            suggestBox.innerHTML = html;
+            suggestBox.style.display = 'block';
+            suggestBox.querySelectorAll('.suggest-item').forEach(item => item.addEventListener('click', function(){
+                const label = this.getAttribute('data-label') || '';
+                searchInput.value = label;
+                suggestBox.style.display = 'none';
+                fetchRows(label);
+                clearBtn.style.display = 'inline-block';
+            }));
+        }
+
+        if (searchInput) {
+            searchInput.addEventListener('input', function(){
+                clearTimeout(debounceId);
+                const q = this.value;
+                debounceId = setTimeout(() => {
+                    const trimmed = (q || '').trim();
+                    if (!trimmed) {
+                        suggestBox.style.display='none';
+                        clearBtn.style.display='none';
+                        fetchRows(currentYear).catch(()=>{});
+                        return;
+                    }
+                    fetchSuggest(trimmed).catch(()=>{});
+                    fetchRows(trimmed).then(()=>{
+                        clearBtn.style.display='inline-block';
+                    }).catch(()=>{});
+                }, 300);
+            });
+
+            document.addEventListener('click', function(e){
+                if (!suggestBox.contains(e.target) && e.target !== searchInput) {
+                    suggestBox.style.display = 'none';
+                }
+            });
+        }
+
+        if (clearBtn) {
+            clearBtn.addEventListener('click', () => {
+                searchInput.value='';
+                suggestBox.style.display='none';
+                clearBtn.style.display='none';
+                // Recharger la liste par défaut (année courante)
+                fetchRows(currentYear).catch(()=>{});
+            });
         }
     })();
 </script>
