@@ -32,7 +32,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authorizeRequests -> authorizeRequests
                                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                                .requestMatchers("/","/login", "/register/**")
+                                .requestMatchers("/","/login", "/register/**", "/dashboard/**")
                                 .permitAll()
                                 .requestMatchers("/apprenti/**").hasRole(Role.APPRENTI.name())
                                 .requestMatchers("/maitre/**").hasRole(Role.MAITRE_APPRENTISSAGE.name())

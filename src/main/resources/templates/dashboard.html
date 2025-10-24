@@ -3,52 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <title>Tableau de bord</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/css/animation.css}">
     <style>
-        .empty-message { color: red; font-weight: bold; }
-        table { border-collapse: collapse; width: 100%; }
-        th, td { border: 1px solid #ddd; padding: 8px; }
-        th { background: #f2f2f2; }
+        /* petits ajustements pour dashboard reprenant le style du login */
+        .card-dashboard { max-width: 1100px; margin: 24px auto; }
+        .empty-message { color: #b02a37; font-weight: 600; }
         .clickable-row { cursor: pointer; }
         .clickable-row:hover { background-color: #f5f5f5; }
+        table th, table td { vertical-align: middle; }
     </style>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" th:href="@{/static/css/base.css}" />
 </head>
-<body>
-    <h1>Tableau de bord - Année <span th:text="${currentYear}"></span></h1>
+<body class="bg-light">
 
-    <div th:if="${apprentis.empty}">
-        <p class="empty-message">La liste est vide. Ajoutez au moins un apprenti</p>
-        <form th:action="@{/dashboard/seed}" method="get">
-            <button type="submit">Ajouter un apprenti automatiquement</button>
-        </form>
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <div class="container">
+        <a class="navbar-brand" href="#">ASTA LSI2</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" th:href="@{/dashboard}">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/logout}">Se déconnecter</a></li>
+            </ul>
+        </div>
     </div>
+</nav>
 
-    <div th:unless="${apprentis.empty}">
-        <h2>Apprentis suivis</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Nom</th>
-                    <th>Prénom</th>
-                    <th>Email</th>
-                    <th>Téléphone</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="apprenti : ${apprentis}" 
-                    class="clickable-row" 
-                    th:onclick="'window.location.href=\'/apprenti/' + ${apprenti.apprentiId} + '\';'">
-                    <td th:text="${apprenti.apprentiId}"></td>
-                    <td th:text="${apprenti.apprentiName}"></td>
-                    <td th:text="${apprenti.apprentiPrenom}"></td>
-                    <td th:text="${apprenti.apprentiEmail}"></td>
-                    <td th:text="${apprenti.telephone}"></td>
-                </tr>
-            </tbody>
-        </table>
+<div class="container card-dashboard">
+    <div class="card shadow-sm slide-down">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="card-title mb-0">Tableau de bord - Année <span th:text="${currentYear}"></span></h3>
+                <div>
+                    <a class="btn btn-primary btn-sm" th:href="@{/dashboard/seed}">Ajouter un apprenti</a>
+                </div>
+            </div>
+
+            <div th:if="${apprentis.empty}">
+                <div class="alert alert-danger" role="alert">
+                    La liste est vide. Ajoutez au moins un apprenti
+                </div>
+            </div>
+
+            <div th:unless="${apprentis.empty}">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-light">
+                        <tr>
+                            <th>Id</th>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>Email</th>
+                            <th>Téléphone</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="apprenti : ${apprentis}" class="clickable-row"
+                            th:attr="data-id=${apprenti.apprentiId},data-name=${apprenti.apprentiName},data-prenom=${apprenti.apprentiPrenom},data-email=${apprenti.apprentiEmail},data-telephone=${apprenti.telephone},data-year=${apprenti.apprentiYear}">
+                            <td th:text="${apprenti.apprentiId}"></td>
+                            <td th:text="${apprenti.apprentiName}"></td>
+                            <td th:text="${apprenti.apprentiPrenom}"></td>
+                            <td th:text="${apprenti.apprentiEmail}"></td>
+                            <td th:text="${apprenti.telephone}"></td>
+                            <td>
+                                <a class="btn btn-sm btn-outline-primary" th:href="@{'/apprenti/' + ${apprenti.apprentiId}}">Modifier</a>
+                                <a class="btn btn-sm btn-outline-danger" th:href="@{'/apprenti/' + ${apprenti.apprentiId} + '/delete'}">Supprimer</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
