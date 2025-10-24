@@ -3,6 +3,7 @@ package client.asta_lsi2.controllers;
 
 import client.asta_lsi2.models.Apprenti;
 import client.asta_lsi2.models.MaitreApprentissage;
+import client.asta_lsi2.service.CookiService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
@@ -20,15 +21,17 @@ import java.util.List;
 
 public class MaitreApprentissageController {
     private final WebClient webClient;
-    public MaitreApprentissageController(WebClient webClient) {
+    private final CookiService cookiService;
+    public MaitreApprentissageController(WebClient webClient, CookiService cookiService) {
         this.webClient = webClient;
+        this.cookiService = cookiService;
     }
 
 
 
     @GetMapping("/home")
     public String apprentiHome(Model model, Authentication authentication, HttpServletRequest request) {
-        String jsessionId = getJSessionId(request);
+        String jsessionId =cookiService.getJSessionId(request);
 
         MaitreApprentissage maitre = webClient.get()
                 .uri("/maitre/getMaitreByEmail/{email}", authentication.getName())
@@ -42,14 +45,4 @@ public class MaitreApprentissageController {
     }
 
 
-    private String getJSessionId(HttpServletRequest request) {
-        if (request.getCookies() != null) {
-            for (Cookie cookie : request.getCookies()) {
-                if ("JSESSIONID".equals(cookie.getName())) {
-                    return cookie.getValue();
-                }
-            }
-        }
-        return null;
-    }
 }

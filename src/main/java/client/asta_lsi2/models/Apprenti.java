@@ -48,7 +48,6 @@ public class Apprenti {
     @Column(length = 20)
     private String telephone;
 
-    @Column(nullable = false)
     private String password;
 
     public Apprenti(Long apprentiId, String apprentiName, String apprentiPrenom,

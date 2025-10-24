@@ -1,8 +1,12 @@
 package client.asta_lsi2.controllers;
 
 import client.asta_lsi2.models.Apprenti;
+import client.asta_lsi2.models.TuteurEnseignant;
 import client.asta_lsi2.service.ApprentiService;
-import client.asta_lsi2.service.CustomUserDetailsService;
+import client.asta_lsi2.service.CookiService;
+import client.asta_lsi2.service.TuteurEnseignantService;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.RequestParam;
 import client.asta_lsi2.service.AnneeAcademiqueCouranteService;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,16 +22,17 @@ import java.util.List;
 public class DashboardController {
 
     private final ApprentiService apprentiService;
-    private final CustomUserDetailsService customUserDetailsService;
     private final WebClient webClient;
     private final AnneeAcademiqueCouranteService anneeAcademiqueCouranteService;
+    private final CookiService cookiService;
+    private final TuteurEnseignantService tuteurEnseignantService;
 
-    public DashboardController(ApprentiService apprentiService, CustomUserDetailsService customUserDetailsService, WebClient webClient, AnneeAcademiqueCouranteService anneeAcademiqueCouranteService)
-    {
+    public DashboardController(ApprentiService apprentiService, WebClient webClient, AnneeAcademiqueCouranteService anneeAcademiqueCouranteService, CookiService cookiService, TuteurEnseignantService tuteurEnseignantService) {
         this.apprentiService = apprentiService;
-        this.customUserDetailsService = customUserDetailsService;
         this.webClient = webClient;
         this.anneeAcademiqueCouranteService = anneeAcademiqueCouranteService;
+        this.cookiService = cookiService;
+        this.tuteurEnseignantService = tuteurEnseignantService;
     }
 
     @GetMapping({ "/dashboard"})
@@ -63,7 +68,6 @@ public class DashboardController {
                 .setAnneeAcademiqueCourante();
         sample.setPassword("password");
         apprentiService.save(sample);
-        //customUserDetailsService.saveApprenti(sample);// pour chiffrage du mdp
         return "redirect:/dashboard";
     }
 

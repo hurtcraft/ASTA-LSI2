@@ -4,10 +4,14 @@ import client.asta_lsi2.models.Apprenti;
 import client.asta_lsi2.models.MaitreApprentissage;
 import client.asta_lsi2.models.Majeur;
 import client.asta_lsi2.models.Programme;
-import client.asta_lsi2.service.ApprentiService;
-import client.asta_lsi2.service.MaitreApprentissageService;
+import client.asta_lsi2.models.Role;
+import client.asta_lsi2.models.TuteurEnseignant;
 import client.asta_lsi2.service.MajeurService;
 import client.asta_lsi2.service.AnneeAcademiqueCouranteService;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,19 +21,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.dao.DataIntegrityViolationException;
 import java.time.Year;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/register")
 public class RegisterController {
 
-    private final ApprentiService apprentiService;
-    private final MaitreApprentissageService maitreApprentissageService;
+    private final WebClient webClient;
     private final MajeurService majeurService;
     private final AnneeAcademiqueCouranteService anneeAcademiqueCouranteService;
 
-    public RegisterController(ApprentiService apprentiService,MaitreApprentissageService maitreApprentissageService, MajeurService majeurService, AnneeAcademiqueCouranteService anneeAcademiqueCouranteService) {
-        this.apprentiService = apprentiService;
-        this.maitreApprentissageService = maitreApprentissageService;
+    public RegisterController(WebClient webClient, MajeurService majeurService, AnneeAcademiqueCouranteService anneeAcademiqueCouranteService) {
+        this.webClient = webClient;
         this.majeurService = majeurService;
         this.anneeAcademiqueCouranteService = anneeAcademiqueCouranteService;
     }
@@ -44,8 +50,14 @@ public class RegisterController {
 
     @GetMapping("/maitre")
     public String registerMaitre(Model model) {
-        model.addAttribute("registerMaitreForm",new MaitreApprentissage());
+        model.addAttribute("registerMaitreForm", new MaitreApprentissage());
         return "maitre/register";
+    }
+
+    @GetMapping("/tuteurEnseignant")
+    public String registerTuteur(Model model) {
+        model.addAttribute("registerTuteurForm", new TuteurEnseignant());
+        return "tuteur/register";
     }
 
     @PostMapping("/apprenti")
@@ -100,9 +112,32 @@ public class RegisterController {
     }
 
     @PostMapping("/maitre")
-    public String registerMaitreSubmit(@ModelAttribute MaitreApprentissage maitreApprentissage, Model model) {
+    public String registerMaitreSubmit(@ModelAttribute MaitreApprentissage maitreApprentissage) {
+        webClient.post()
+                .uri("/register/maitre")
+                .bodyValue(maitreApprentissage)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+        return "redirect:/dashboard";
+    }
 
-        maitreApprentissageService.save(maitreApprentissage);
-        return "redirect:/login";
+    @PostMapping("/tuteurEnseignant")
+    public String registerTuteurSubmit(@ModelAttribute TuteurEnseignant tuteurEnseignant) {
+        webClient.post()
+                .uri("/register/tuteurEnseignant")
+                .bodyValue(tuteurEnseignant)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                tuteurEnseignant.getEmail(),
+                tuteurEnseignant.getPassword(),
+                List.of(new SimpleGrantedAuthority(Role.TUTEUR_ENSEIGNANT.name()))
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        return "redirect:/dashboard?email=" + tuteurEnseignant.getEmail();
     }
 }

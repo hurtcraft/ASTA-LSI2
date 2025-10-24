@@ -3,6 +3,7 @@ package client.asta_lsi2.controllers.restcontrollers;
 
 import client.asta_lsi2.models.Apprenti;
 import client.asta_lsi2.service.ApprentiService;
+import client.asta_lsi2.service.ProgrammeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -27,8 +28,11 @@ import java.util.Optional;
 public class ApprentiRestController {
 
     private final ApprentiService apprentiService;
-    public ApprentiRestController(ApprentiService apprentiService) {
+    private final ProgrammeService programmeService;
+
+    public ApprentiRestController(ApprentiService apprentiService, ProgrammeService programmeService) {
         this.apprentiService = apprentiService;
+        this.programmeService = programmeService;
     }
 
     @Operation(summary = "Récupère un apprenti par email")
@@ -59,5 +63,60 @@ public class ApprentiRestController {
         return apprentiService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PatchMapping("/editApprenti/{id}")
+    public ResponseEntity<Apprenti> updateApprenti(@PathVariable Long id, @RequestBody Apprenti updatedApprenti) {
+        Optional<Apprenti> existingApprentiOpt = apprentiService.findById(id);
+        if (existingApprentiOpt.isPresent()) {
+            Apprenti existingApprenti = existingApprentiOpt.get();
+            // Mise à jour partielle : ne modifier que les champs non-null fournis dans le payload
+            if (updatedApprenti.getApprentiName() != null) {
+                existingApprenti.setApprentiName(updatedApprenti.getApprentiName());
+            }
+            if (updatedApprenti.getApprentiPrenom() != null) {
+                existingApprenti.setApprentiPrenom(updatedApprenti.getApprentiPrenom());
+            }
+            if (updatedApprenti.getApprentiEmail() != null) {
+                existingApprenti.setApprentiEmail(updatedApprenti.getApprentiEmail());
+            }
+            if (updatedApprenti.getTelephone() != null) {
+                existingApprenti.setTelephone(updatedApprenti.getTelephone());
+            }
+            if (updatedApprenti.getApprentiYear() != null) {
+                existingApprenti.setApprentiYear(updatedApprenti.getApprentiYear());
+            }
+            if (updatedApprenti.getMajeur() != null) {
+                existingApprenti.setMajeur(updatedApprenti.getMajeur());
+            }
+            if (updatedApprenti.getEntreprise() != null) {
+                existingApprenti.setEntreprise(updatedApprenti.getEntreprise());
+            }
+            if (updatedApprenti.getProgramme() != null) {
+                if (updatedApprenti.getProgramme().getProgrammeId() != null) {
+                    Long progId = updatedApprenti.getProgramme().getProgrammeId();
+                    var prog = programmeService.findById(progId);
+                    if (prog != null) {
+                        existingApprenti.setProgramme(prog);
+                    }
+                } else if (updatedApprenti.getProgramme().getLabel() != null) {
+                    var prog = programmeService.findByLabel(updatedApprenti.getProgramme().getLabel());
+                    if (prog != null) {
+                        existingApprenti.setProgramme(prog);
+                    }
+                } else {
+                    existingApprenti.setProgramme(updatedApprenti.getProgramme());
+                }
+            }
+            // Mot de passe : si fourni et non vide, le service l'encodera ; si absent, on le garde tel quel
+            if (updatedApprenti.getPassword() != null && !updatedApprenti.getPassword().isBlank()) {
+                existingApprenti.setPassword(updatedApprenti.getPassword());
+            }
+
+            apprentiService.save(existingApprenti);
+            return ResponseEntity.ok(existingApprenti);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

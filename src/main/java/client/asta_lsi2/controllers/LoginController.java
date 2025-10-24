@@ -31,9 +31,7 @@ public class LoginController {
 
     private final AuthenticationManager authenticationManager;
     private static final Map<String, String> ROLE_HOME_MAP = Map.of(
-            "ROLE_" + Role.APPRENTI.name(), "/apprenti/home",
-            "ROLE_" + Role.MAITRE_APPRENTISSAGE.name(), "/maitre/home"
-
+            "ROLE_" + Role.TUTEUR_ENSEIGNANT, "/dashboard"
     );
 
     public LoginController(AuthenticationManager authenticationManager) {
@@ -56,7 +54,7 @@ public class LoginController {
     public String loginSubmit(@ModelAttribute LoginRequest loginRequest, HttpServletRequest request,
                               RedirectAttributes redirectAttributes) {
         try {
-
+            System.out.println(loginRequest);
             UsernamePasswordAuthenticationToken authToken =
                     new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword());
 
@@ -74,10 +72,11 @@ public class LoginController {
 
             System.out.println(loginRequest);
             Optional<String> redirectUrl = userDetails.getAuthorities().stream()
-                    .map(GrantedAuthority::getAuthority) // ex: "ROLE_APPRENTI"
-                    .map(ROLE_HOME_MAP::get)              // ex: "/apprenti/home"
+                    .map(GrantedAuthority::getAuthority)
+                    .map(ROLE_HOME_MAP::get)
                     .filter(Objects::nonNull)
                     .findFirst();
+
             userDetails.getAuthorities().forEach(a -> System.out.println(a.getAuthority()));
 
             return "redirect:"+ redirectUrl.orElse("/login");
