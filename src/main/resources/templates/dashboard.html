@@ -32,6 +32,11 @@
                 </div>
             </div>
 
+            <div class="mb-3" th:unless="${apprentis.empty}">
+                <button id="sortAZ" class="btn btn-sm btn-outline-secondary">Trier A-Z</button>
+                <button id="sortZA" class="btn btn-sm btn-outline-secondary ms-2">Trier Z-A</button>
+            </div>
+
             <div th:if="${apprentis.empty}">
                 <div class="alert alert-danger" role="alert">
                     La liste est vide. Ajoutez au moins un apprenti
@@ -46,6 +51,7 @@
                             <th>Id</th>
                             <th>Nom</th>
                             <th>Prénom</th>
+                            <th>Programme</th>
                             <th>Email</th>
                             <th>Téléphone</th>
                             <th>Actions</th>
@@ -57,6 +63,7 @@
                             <td th:text="${apprenti.apprentiId}"></td>
                             <td th:text="${apprenti.apprentiName}"></td>
                             <td th:text="${apprenti.apprentiPrenom}"></td>
+                            <td th:text="${apprenti.programme != null ? apprenti.programme.label : 'N/A'}"></td>
                             <td th:text="${apprenti.apprentiEmail}"></td>
                             <td th:text="${apprenti.telephone}"></td>
                             <td>
@@ -151,6 +158,42 @@
                 }
             });
         });
+
+        // Tri dynamique des apprentis
+        const sortAZ = document.getElementById('sortAZ');
+        const sortZA = document.getElementById('sortZA');
+        const tbody = document.querySelector('table tbody');
+        
+        function sortTable(ascending) {
+            if (!tbody) return;
+            
+            const rowsArray = Array.from(tbody.querySelectorAll('tr'));
+            
+            rowsArray.sort((a, b) => {
+                const nameA = (a.getAttribute('data-name') || '').toLowerCase();
+                const nameB = (b.getAttribute('data-name') || '').toLowerCase();
+                
+                if (ascending) {
+                    return nameA.localeCompare(nameB);
+                } else {
+                    return nameB.localeCompare(nameA);
+                }
+            });
+            
+            // Réorganiser les lignes dans le DOM
+            rowsArray.forEach(row => tbody.appendChild(row));
+            
+            // Réattacher les événements après réorganisation
+            stopAnchorPropagation();
+        }
+        
+        if (sortAZ) {
+            sortAZ.addEventListener('click', () => sortTable(true));
+        }
+        
+        if (sortZA) {
+            sortZA.addEventListener('click', () => sortTable(false));
+        }
     })();
 </script>
 </body>

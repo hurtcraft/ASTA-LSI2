@@ -2,13 +2,12 @@ package client.asta_lsi2.controllers;
 
 
 import client.asta_lsi2.models.Apprenti;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import client.asta_lsi2.service.ProgrammeService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,9 +24,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class ApprentiController {
 
     private final WebClient webClient; //pointe sur http://localhost:8080/api par défaut
+    private final ProgrammeService programmeService;
 
-    public ApprentiController(WebClient webClient) {
+    public ApprentiController(WebClient webClient, ProgrammeService programmeService) {
         this.webClient = webClient;
+        this.programmeService = programmeService;
     }
 
 
@@ -106,6 +107,8 @@ public class ApprentiController {
                 .block();
 
         model.addAttribute("apprenti", apprenti);
+        // Populate programmes for select preselection
+        model.addAttribute("programmes", programmeService.findAll());
         return "apprenti/useredit";
     }
 
