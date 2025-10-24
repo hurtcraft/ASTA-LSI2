@@ -32,10 +32,42 @@
     <div class="card shadow-sm slide-down">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3 class="card-title mb-0">Tableau de bord - Année <span th:text="${currentYear}"></span></h3>
+                <h3 class="card-title mb-0">Tableau de bord - Année académique <span th:text="${currentYear}"></span>-<span th:text="${currentYear.plusYears(1)}"></span></h3>
                 <div>
                     <a class="btn btn-primary btn-sm" th:href="@{/register/apprenti}">Ajouter un apprenti</a>
-                    <a class="btn btn-outline-primary btn-sm ms-2" th:href="@{/programmes}">Gérer les programmes</a>
+                    <a class="btn btn-outline-primary btn-sm ms-2" th:href="@{/majeurs}">Gérer les majeurs</a>
+                    <a class="btn btn-outline-warning btn-sm ms-2" th:href="@{/annee-academique}">
+                        Gérer les années
+                    </a>
+                </div>
+            </div>
+
+            <!-- Options de tri -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="btn-group" role="group">
+                        <a class="btn btn-outline-secondary btn-sm" th:href="@{/dashboard}" 
+                           th:classappend="${triActuel == 'aucun'} ? 'active' : ''">
+                            Tous
+                        </a>
+                        <a class="btn btn-outline-secondary btn-sm" th:href="@{/dashboard(tri='date')}" 
+                           th:classappend="${triActuel == 'date'} ? 'active' : ''">
+                            Par date
+                        </a>
+                        <a class="btn btn-outline-secondary btn-sm" th:href="@{/dashboard(tri='programme')}" 
+                           th:classappend="${triActuel == 'programme'} ? 'active' : ''">
+                            Par programme
+                        </a>
+                        <a class="btn btn-outline-secondary btn-sm" th:href="@{/dashboard(tri='nom')}" 
+                           th:classappend="${triActuel == 'nom'} ? 'active' : ''">
+                            Par nom
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-6 text-end">
+                    <small class="text-muted">
+                        <span th:text="${#lists.size(apprentis)}"></span> apprenti(s) affiché(s)
+                    </small>
                 </div>
             </div>
 
@@ -55,17 +87,23 @@
                             <th>Prénom</th>
                             <th>Email</th>
                             <th>Téléphone</th>
+                            <th>Programme</th>
+                            <th>Année Académique</th>
                             <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="apprenti : ${apprentis}" class="clickable-row"
-                            th:attr="data-id=${apprenti.apprentiId},data-name=${apprenti.apprentiName},data-prenom=${apprenti.apprentiPrenom},data-email=${apprenti.apprentiEmail},data-telephone=${apprenti.telephone},data-year=${apprenti.apprentiYear}">
+                            th:attr="data-id=${apprenti.apprentiId},data-name=${apprenti.apprentiName},data-prenom=${apprenti.apprentiPrenom},data-email=${apprenti.apprentiEmail},data-telephone=${apprenti.telephone},data-year=${apprenti.anneeAcademiqueString}">
                             <td th:text="${apprenti.apprentiId}"></td>
                             <td th:text="${apprenti.apprentiName}"></td>
                             <td th:text="${apprenti.apprentiPrenom}"></td>
                             <td th:text="${apprenti.apprentiEmail}"></td>
                             <td th:text="${apprenti.telephone}"></td>
+                            <td>
+                                <span class="badge bg-primary" th:text="${apprenti.programme.label}"></span>
+                            </td>
+                            <td th:text="${apprenti.anneeAcademiqueString}"></td>
                             <td>
                                 <a class="btn btn-sm btn-outline-primary" th:href="@{'/apprenti/' + ${apprenti.apprentiId}}">Modifier</a>
                                 <a class="btn btn-sm btn-outline-danger delete-apprenti" th:href="@{'/apprenti/deleteapprenti/' + ${apprenti.apprentiId}}">Supprimer</a>

@@ -14,6 +14,10 @@
             <div class="col-lg-6 col-md-8 bg-white p-4 rounded shadow-sm">
                 <h2 class="text-center mb-4">Ajouter un apprenti</h2>
 
+                <div th:if="${error}" class="alert alert-danger" role="alert">
+                    <span th:text="${error}"></span>
+                </div>
+
                 <form th:action="@{/register/apprenti}" th:object="${registerApprentiForm}" method="post" class="d-flex flex-column gap-3">
 
                     <div>
@@ -32,25 +36,24 @@
                     </div>
 
                     <div>
-                        <label for="apprentiYear" class="form-label">Année :</label>
-                        <input type="number" id="apprentiYear" th:field="*{apprentiYear}" class="form-control" placeholder="2025" required>
-                    </div>
-
-                    <div>
                         <label for="majeur" class="form-label">Majeur :</label>
-                        <select id="majeur" th:field="*{majeur}" class="form-select" >
-                            <option value="" disabled selected>Choisissez un majeur</option>
-                            <!-- TODO: Ajouter les options de majeurs -->
+                        <select id="majeur" name="majeurId" class="form-select" >
+                            <option value="" disabled th:selected="${registerApprentiForm.majeur == null}">Choisissez un majeur</option>
+                            <option th:each="majeur : ${majeurs}" 
+                                    th:value="${majeur.majeurId}" 
+                                    th:text="${majeur.label}"
+                                    th:selected="${registerApprentiForm.majeur != null && registerApprentiForm.majeur.majeurId == majeur.majeurId}"></option>
                         </select>
                     </div>
 
                     <div>
                         <label for="programme" class="form-label">Programme :</label>
-                        <select id="programme" th:field="*{programme}" class="form-select" >
-                            <option value="" disabled selected>Choisissez un programme</option>
+                        <select id="programme" name="programme" class="form-select" >
+                            <option value="" disabled th:selected="${registerApprentiForm.programme == null}">Choisissez un programme</option>
                             <option th:each="programme : ${programmes}" 
-                                    th:value="${programme}" 
-                                    th:text="${programme.label}"></option>
+                                    th:value="${programme.name()}" 
+                                    th:text="${programme.label}"
+                                    th:selected="${registerApprentiForm.programme != null && registerApprentiForm.programme.name() == programme.name()}"></option>
                         </select>
                     </div>
 

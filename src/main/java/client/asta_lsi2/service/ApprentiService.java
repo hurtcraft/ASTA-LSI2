@@ -22,7 +22,7 @@ public class ApprentiService {
 	}
 
 	public List<Apprenti> listApprentisForYear(Year year) {
-		return apprentiRepository.findByApprentiYear(year);
+		return apprentiRepository.findByAnneeAcademiqueDebut(year);
 	}
 
 	public boolean apprentiExistsByEmail(String email) {
@@ -47,7 +47,7 @@ public class ApprentiService {
 		return apprentiRepository.findApprentisByEntrepriseRaisonSociale(raisonSociale);
 	}
 	public List<Apprenti> findByAnne(int anne){
-		return apprentiRepository.findByApprentiYear(Year.of(anne));
+		return apprentiRepository.findByAnneeAcademiqueDebut(Year.of(anne));
 	}
 	
 	public List<Apprenti> findAll() {

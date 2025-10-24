@@ -28,7 +28,10 @@ public class Apprenti {
     private String apprentiEmail;
 
     @Column(nullable = false)
-    private Year apprentiYear;
+    private Year anneeAcademiqueDebut;
+
+    @Column(nullable = false)
+    private Year anneeAcademiqueFin;
 
     @ManyToOne
     @JoinColumn(name = "majeurId")
@@ -38,8 +41,8 @@ public class Apprenti {
     @JoinColumn(name="entrepriseId")
     private Entreprise entreprise;
 
-    @ManyToOne
-    @JoinColumn(name = "programmeId")
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Programme programme;
 
     @Column(length = 20)
@@ -59,6 +62,18 @@ public class Apprenti {
     }
 
     public Apprenti() {
+    }
+
+    // Méthode pour définir automatiquement l'année académique courante
+    public void setAnneeAcademiqueCourante() {
+        Year currentYear = Year.now();
+        this.anneeAcademiqueDebut = currentYear;
+        this.anneeAcademiqueFin = currentYear.plusYears(1);
+    }
+
+    // Méthode pour obtenir l'année académique sous forme de chaîne
+    public String getAnneeAcademiqueString() {
+        return anneeAcademiqueDebut + "-" + anneeAcademiqueFin;
     }
 
     @Override

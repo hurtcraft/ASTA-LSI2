@@ -3,13 +3,16 @@ package client.asta_lsi2.controllers;
 import client.asta_lsi2.models.Apprenti;
 import client.asta_lsi2.service.ApprentiService;
 import client.asta_lsi2.service.CustomUserDetailsService;
+import client.asta_lsi2.service.AnneeAcademiqueCouranteService;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.Year;
+import java.util.List;
 
 @Controller
 public class DashboardController {
@@ -17,34 +20,47 @@ public class DashboardController {
     private final ApprentiService apprentiService;
     private final CustomUserDetailsService customUserDetailsService;
     private final WebClient webClient;
+    private final AnneeAcademiqueCouranteService anneeAcademiqueCouranteService;
 
-    public DashboardController(ApprentiService apprentiService, CustomUserDetailsService customUserDetailsService, WebClient webClient)
+    public DashboardController(ApprentiService apprentiService, CustomUserDetailsService customUserDetailsService, WebClient webClient, AnneeAcademiqueCouranteService anneeAcademiqueCouranteService)
     {
         this.apprentiService = apprentiService;
         this.customUserDetailsService = customUserDetailsService;
         this.webClient = webClient;
+        this.anneeAcademiqueCouranteService = anneeAcademiqueCouranteService;
     }
 
     @GetMapping({ "/dashboard"})
-    public String dashboard(Model model) {
-        Year currentYear = Year.now();
+    public String dashboard(@RequestParam(required = false) String tri, Model model) {
+        Year currentYear = anneeAcademiqueCouranteService.getAnneeDebut();
         model.addAttribute("currentYear", currentYear);
-        model.addAttribute("apprentis", apprentiService.listApprentisForYear(currentYear));
-
-        System.out.println(apprentiService.listApprentisForYear(currentYear));
+        
+        List<Apprenti> tousApprentis = apprentiService.findAll();
+        
+        if ("date" != null && "date".equals(tri)) {
+            tousApprentis.sort((a1, a2) -> a2.getAnneeAcademiqueDebut().compareTo(a1.getAnneeAcademiqueDebut()));
+        } else if ("programme" != null && "programme".equals(tri)) {
+            tousApprentis.sort((a1, a2) -> a1.getProgramme().compareTo(a2.getProgramme()));
+        } else if ("nom" != null && "nom".equals(tri)) {
+            tousApprentis.sort((a1, a2) -> a1.getApprentiName().compareTo(a2.getApprentiName()));
+        }
+        
+        model.addAttribute("apprentis", tousApprentis);
+        model.addAttribute("triActuel", tri != null ? tri : "aucun");
+        
+        System.out.println("Total apprentis affichés: " + tousApprentis.size());
         return "dashboard";
     }
 
     @GetMapping("/dashboard/seed")
     public String seedSampleApprenti() {
-        Year currentYear = Year.now();
-
         Apprenti sample = new Apprenti();
         sample.setApprentiName("NomSample");
         sample.setApprentiPrenom("PrenomSample");
         sample.setApprentiEmail("sample" + System.currentTimeMillis() + "@example.com");
         sample.setTelephone("0000000000");
-        sample.setApprentiYear(currentYear);
+        sample
+                .setAnneeAcademiqueCourante();
         sample.setPassword("password");
         apprentiService.save(sample);
         //customUserDetailsService.saveApprenti(sample);// pour chiffrage du mdp

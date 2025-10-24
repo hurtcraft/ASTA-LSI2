@@ -1,23 +1,22 @@
 package client.asta_lsi2.models;
 
-import jakarta.persistence.*;
-import lombok.Data;
-
-@Data
-@Entity
-public class Programme {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long programmeId;
-
-    @Column(nullable = false,unique = true, length = 100)
-    private String label;
-
+public enum Programme {
+    I1("I1"),
+    I2("I2"),
+    I3("I3");
+    
+    private final String label;
+    
+    Programme(String label) {
+        this.label = label;
+    }
+    
+    public String getLabel() {
+        return label;
+    }
+    
     @Override
     public String toString() {
-        return "Programme{" +
-                "programme_id=" + programmeId +
-                ", label='" + label + '\'' +
-                '}';
+        return label;
     }
 }
