@@ -8,6 +8,7 @@ import client.asta_lsi2.models.Role;
 import client.asta_lsi2.models.TuteurEnseignant;
 import client.asta_lsi2.service.MajeurService;
 import client.asta_lsi2.service.AnneeAcademiqueCouranteService;
+import client.asta_lsi2.service.ApprentiService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,7 +25,6 @@ import java.time.Year;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/register")
@@ -33,11 +33,13 @@ public class RegisterController {
     private final WebClient webClient;
     private final MajeurService majeurService;
     private final AnneeAcademiqueCouranteService anneeAcademiqueCouranteService;
+    private final ApprentiService apprentiService;
 
-    public RegisterController(WebClient webClient, MajeurService majeurService, AnneeAcademiqueCouranteService anneeAcademiqueCouranteService) {
+    public RegisterController(WebClient webClient, MajeurService majeurService, AnneeAcademiqueCouranteService anneeAcademiqueCouranteService, ApprentiService apprentiService) {
         this.webClient = webClient;
         this.majeurService = majeurService;
         this.anneeAcademiqueCouranteService = anneeAcademiqueCouranteService;
+        this.apprentiService = apprentiService;
     }
 
     @GetMapping("/apprenti")
@@ -71,18 +73,40 @@ public class RegisterController {
             apprenti.setAnneeAcademiqueDebut(anneeDebut);
             apprenti.setAnneeAcademiqueFin(anneeDebut.plusYears(1));
             
+            // Définir un mot de passe par défaut si non fourni
+            if (apprenti.getPassword() == null || apprenti.getPassword().isEmpty()) {
+                apprenti.setPassword("password123"); // Mot de passe par défaut
+            }
+            
             // Convertir les IDs en objets AVANT la sauvegarde
             if (majeurId != null) {
                 Majeur majeur = majeurService.findById(majeurId);
                 apprenti.setMajeur(majeur);
+            } else {
+                // Aucun majeur fourni, retourner une erreur
+                model.addAttribute("error", "Veuillez sélectionner un majeur.");
+                model.addAttribute("registerApprentiForm", apprenti);
+                model.addAttribute("majeurs", majeurService.findAll());
+                model.addAttribute("programmes", Programme.values());
+                return "apprenti/register";
             }
             
             if (programme != null && !programme.isEmpty()) {
                 try {
                     apprenti.setProgramme(Programme.valueOf(programme));
                 } catch (IllegalArgumentException e) {
-                    // Programme invalide, on peut ajouter une gestion d'erreur ici
+                    // Programme invalide, utiliser I1 par défaut
+                    apprenti.setProgramme(Programme.I1);
                 }
+            } else {
+                // Aucun programme fourni, utiliser I1 par défaut
+                apprenti.setProgramme(Programme.I1);
+            }
+            
+            // Définir une entreprise par défaut si non fournie
+            if (apprenti.getEntreprise() == null) {
+                // Créer une entreprise par défaut ou utiliser une existante
+                // Pour l'instant, on laisse null car ce n'est pas requis
             }
             
             apprentiService.save(apprenti);

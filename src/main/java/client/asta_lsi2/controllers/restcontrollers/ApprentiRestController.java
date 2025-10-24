@@ -3,7 +3,6 @@ package client.asta_lsi2.controllers.restcontrollers;
 
 import client.asta_lsi2.models.Apprenti;
 import client.asta_lsi2.service.ApprentiService;
-import client.asta_lsi2.service.ProgrammeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -16,9 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.HttpStatus;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -28,11 +25,9 @@ import java.util.Optional;
 public class ApprentiRestController {
 
     private final ApprentiService apprentiService;
-    private final ProgrammeService programmeService;
 
-    public ApprentiRestController(ApprentiService apprentiService, ProgrammeService programmeService) {
+    public ApprentiRestController(ApprentiService apprentiService) {
         this.apprentiService = apprentiService;
-        this.programmeService = programmeService;
     }
 
     @Operation(summary = "Récupère un apprenti par email")
@@ -83,8 +78,11 @@ public class ApprentiRestController {
             if (updatedApprenti.getTelephone() != null) {
                 existingApprenti.setTelephone(updatedApprenti.getTelephone());
             }
-            if (updatedApprenti.getApprentiYear() != null) {
-                existingApprenti.setApprentiYear(updatedApprenti.getApprentiYear());
+            if (updatedApprenti.getAnneeAcademiqueDebut() != null) {
+                existingApprenti.setAnneeAcademiqueDebut(updatedApprenti.getAnneeAcademiqueDebut());
+            }
+            if (updatedApprenti.getAnneeAcademiqueFin() != null) {
+                existingApprenti.setAnneeAcademiqueFin(updatedApprenti.getAnneeAcademiqueFin());
             }
             if (updatedApprenti.getMajeur() != null) {
                 existingApprenti.setMajeur(updatedApprenti.getMajeur());
@@ -93,20 +91,7 @@ public class ApprentiRestController {
                 existingApprenti.setEntreprise(updatedApprenti.getEntreprise());
             }
             if (updatedApprenti.getProgramme() != null) {
-                if (updatedApprenti.getProgramme().getProgrammeId() != null) {
-                    Long progId = updatedApprenti.getProgramme().getProgrammeId();
-                    var prog = programmeService.findById(progId);
-                    if (prog != null) {
-                        existingApprenti.setProgramme(prog);
-                    }
-                } else if (updatedApprenti.getProgramme().getLabel() != null) {
-                    var prog = programmeService.findByLabel(updatedApprenti.getProgramme().getLabel());
-                    if (prog != null) {
-                        existingApprenti.setProgramme(prog);
-                    }
-                } else {
-                    existingApprenti.setProgramme(updatedApprenti.getProgramme());
-                }
+                existingApprenti.setProgramme(updatedApprenti.getProgramme());
             }
             // Mot de passe : si fourni et non vide, le service l'encodera ; si absent, on le garde tel quel
             if (updatedApprenti.getPassword() != null && !updatedApprenti.getPassword().isBlank()) {

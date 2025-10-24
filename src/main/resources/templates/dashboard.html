@@ -21,7 +21,7 @@
 <!--                    <a class="btn btn-primary" th:href="@{/dashboard}">Dashboard</a>-->
 <!--                </li>-->
                 <li class="nav-item">
-                    <span class="nav-link" th:text="${tuteur.nom} + ' ' + ${tuteur.prenom}">Nom Prénom</span>
+                    <span class="nav-link" th:text="${tuteur != null ? tuteur.nom + ' ' + tuteur.prenom : 'Utilisateur'}">Nom Prénom</span>
                 </li>
                 <li class="nav-item">
                     <a class="btn btn-danger text-white px-3" th:href="@{/logout}">Se déconnecter</a>
@@ -36,7 +36,7 @@
     <div class="card shadow-sm slide-down">
         <div class="card-body" id="dashboardCard" th:attr="data-current-year=${currentYear}">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3 class="card-title mb-0">Tableau de bord - Année académique <span th:text="${currentYear}"></span>-<span th:text="${currentYear.plusYears(1)}"></span></h3>
+                <h3 class="card-title mb-0">Tableau de bord - Année académique <span th:text="${currentYear}"></span>-<span th:text="${currentYear != null ? currentYear.plusYears(1) : 'N/A'}"></span></h3>
                 <div>
                     <a class="btn btn-primary btn-sm" th:href="@{/register/apprenti}">Ajouter un apprenti</a>
                     <a class="btn btn-outline-primary btn-sm ms-2" th:href="@{/majeurs}">Gérer les majeurs</a>
@@ -125,7 +125,7 @@
                             <td th:text="${apprenti.apprentiEmail}"></td>
                             <td th:text="${apprenti.telephone}"></td>
                             <td>
-                                <span class="badge bg-primary" th:text="${apprenti.programme.label}"></span>
+                                <span class="badge bg-primary" th:text="${apprenti.programme != null ? apprenti.programme.label : 'N/A'}"></span>
                             </td>
                             <td th:text="${apprenti.anneeAcademiqueString}"></td>
                             <td>
