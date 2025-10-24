@@ -31,13 +31,13 @@ public class CustomUserDetailsService implements UserDetailsService {
         return apprentiRepo.findByApprentiEmail(email)
                 .map(a -> org.springframework.security.core.userdetails.User
                         .withUsername(a.getApprentiEmail())
-                        .password(a.getPassword() )
+                        .password(a.getPassword() == null ? "" : a.getPassword())
                         .roles(Role.APPRENTI.name())
                         .build())
                 .orElseGet(() -> maitreRepo.findByMaEmail(email)
                         .map(m -> org.springframework.security.core.userdetails.User
                                 .withUsername(m.getMaEmail())
-                                .password(m.getPassword())
+                                .password(m.getPassword() == null ? "" : m.getPassword())
                                 .roles(Role.MAITRE_APPRENTISSAGE.name())
                                 .build())
                         .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé")));

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/apprenti")
@@ -58,5 +59,48 @@ public class ApprentiRestController {
         return apprentiService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PatchMapping("/editApprenti/{id}")
+    public ResponseEntity<Apprenti> updateApprenti(@PathVariable Long id, @RequestBody Apprenti updatedApprenti) {
+        Optional<Apprenti> existingApprentiOpt = apprentiService.findById(id);
+        if (existingApprentiOpt.isPresent()) {
+            Apprenti existingApprenti = existingApprentiOpt.get();
+            // Mise à jour partielle : ne modifier que les champs non-null fournis dans le payload
+            if (updatedApprenti.getApprentiName() != null) {
+                existingApprenti.setApprentiName(updatedApprenti.getApprentiName());
+            }
+            if (updatedApprenti.getApprentiPrenom() != null) {
+                existingApprenti.setApprentiPrenom(updatedApprenti.getApprentiPrenom());
+            }
+            if (updatedApprenti.getApprentiEmail() != null) {
+                existingApprenti.setApprentiEmail(updatedApprenti.getApprentiEmail());
+            }
+            if (updatedApprenti.getTelephone() != null) {
+                existingApprenti.setTelephone(updatedApprenti.getTelephone());
+            }
+            if (updatedApprenti.getApprentiYear() != null) {
+                existingApprenti.setApprentiYear(updatedApprenti.getApprentiYear());
+            }
+            // Relations : remplacer si un objet non-null est fourni (attend généralement un JSON avec l'id)
+            if (updatedApprenti.getMajeur() != null) {
+                existingApprenti.setMajeur(updatedApprenti.getMajeur());
+            }
+            if (updatedApprenti.getEntreprise() != null) {
+                existingApprenti.setEntreprise(updatedApprenti.getEntreprise());
+            }
+            if (updatedApprenti.getProgramme() != null) {
+                existingApprenti.setProgramme(updatedApprenti.getProgramme());
+            }
+            // Mot de passe : si fourni et non vide, le service l'encodera ; si absent, on le garde tel quel
+            if (updatedApprenti.getPassword() != null && !updatedApprenti.getPassword().isBlank()) {
+                existingApprenti.setPassword(updatedApprenti.getPassword());
+            }
+
+            apprentiService.save(existingApprenti);
+            return ResponseEntity.ok(existingApprenti);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

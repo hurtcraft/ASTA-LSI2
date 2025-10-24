@@ -8,12 +8,10 @@
 </head>
 <body>
     <div th:fragment="userinfoFragment" class="info-container">
-        <a th:href="@{/dashboard}" class="back-button">← Retour au tableau de bord</a>
         
         <h1>Informations de l'apprenti</h1>
         
         <div class="info-section">
-            <h2>Informations personnelles</h2>
             <div class="info-row">
                 <span class="info-label">ID :</span>
                 <span class="info-value" th:text="${apprenti.apprentiId}"></span>

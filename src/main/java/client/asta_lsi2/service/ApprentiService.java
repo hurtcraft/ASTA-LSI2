@@ -33,7 +33,11 @@ public class ApprentiService {
 		return apprentiRepository.findByApprentiEmail(email);
 	}
 	public void save(Apprenti apprenti) {
-		apprenti.setPassword(passwordEncoder.encode(apprenti.getPassword()));
+		if (apprenti.getPassword() != null && !apprenti.getPassword().isBlank()) {
+			apprenti.setPassword(passwordEncoder.encode(apprenti.getPassword()));
+		} else {
+			apprenti.setPassword(null);
+		}
 		apprentiRepository.save(apprenti);
 	}
 	public List<Apprenti> findByApprentiName(String apprentiName) {
@@ -57,4 +61,5 @@ public class ApprentiService {
 	public void deleteById(Long id) {
 		apprentiRepository.deleteById(id);
 	}
+
 }

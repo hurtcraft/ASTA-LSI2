@@ -6,13 +6,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" th:href="@{/css/animation.css}">
-    <style>
-        .card-dashboard { max-width: 1100px; margin: 24px auto; }
-        .empty-message { color: #b02a37; font-weight: 600; }
-        .clickable-row { cursor: pointer; }
-        .clickable-row:hover { background-color: #f5f5f5; }
-        table th, table td { vertical-align: middle; }
-    </style>
 </head>
 <body class="bg-light">
 
@@ -66,7 +59,7 @@
                             <td th:text="${apprenti.apprentiEmail}"></td>
                             <td th:text="${apprenti.telephone}"></td>
                             <td>
-                                <a class="btn btn-sm btn-outline-primary" th:href="@{'/apprenti/' + ${apprenti.apprentiId}}">Modifier</a>
+                                <a class="btn btn-sm btn-outline-primary" th:href="@{'/apprenti/edit/' + ${apprenti.apprentiId}}">Éditer</a>
                                 <a class="btn btn-sm btn-outline-danger delete-apprenti" th:href="@{'/apprenti/deleteapprenti/' + ${apprenti.apprentiId}}">Supprimer</a>
                             </td>
                         </tr>
@@ -80,7 +73,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Modal pour afficher la page userinfo en fragment -->
 <div class="modal fade" id="apprentiModal" tabindex="-1" aria-labelledby="apprentiModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">

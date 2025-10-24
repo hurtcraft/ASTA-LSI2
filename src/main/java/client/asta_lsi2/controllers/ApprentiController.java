@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
+import org.springframework.web.bind.annotation.PostMapping;
+
 
 @Controller
 @RequestMapping("/apprenti")
@@ -56,7 +57,7 @@ public class ApprentiController {
         return "apprenti/home";
     }
 
-    @DeleteMapping("/apprenti/deleteapprenti/{id}")
+    @DeleteMapping("/deleteapprenti/{id}")
     public String deleteApprenti(@PathVariable Long id, Authentication authentication, HttpServletRequest request) {
         String jsessionId = null;
         if (request.getCookies() != null) {
@@ -82,5 +83,53 @@ public class ApprentiController {
         } else {
             return "redirect:/apprenti/home?error=true";
         }
+    }
+
+    @GetMapping("/edit/{id}")
+    public String editApprenti(@PathVariable Long id, Model model, Authentication authentication, HttpServletRequest request) {
+        String jsessionId = null;
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("JSESSIONID".equals(cookie.getName())) {
+                    jsessionId = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        String finalJsessionId = jsessionId;
+        Apprenti apprenti = webClient.get()
+                .uri("/apprenti/getApprentiById/{id}", id)
+                .cookies(c -> c.add("JSESSIONID", finalJsessionId))
+                .retrieve()
+                .bodyToMono(Apprenti.class)
+                .block();
+
+        model.addAttribute("apprenti", apprenti);
+        return "apprenti/useredit";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String updateApprenti(@PathVariable Long id, Apprenti apprentiForm, Authentication authentication, HttpServletRequest request) {
+        String jsessionId = null;
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("JSESSIONID".equals(cookie.getName())) {
+                    jsessionId = cookie.getValue();
+                    break;
+                }
+            }
+        }
+        String finalJsessionId = jsessionId;
+
+    webClient.patch()
+        .uri("/apprenti/editApprenti/{id}", id)
+                .cookies(c -> c.add("JSESSIONID", finalJsessionId))
+                .bodyValue(apprentiForm)
+                .retrieve()
+                .toBodilessEntity()
+                .block();
+
+        return "redirect:/dashboard";
     }
 }
