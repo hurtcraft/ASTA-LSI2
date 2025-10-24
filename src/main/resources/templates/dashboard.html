@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" th:href="@{/css/animation.css}">
     <style>
-        /* petits ajustements pour dashboard reprenant le style du login */
         .card-dashboard { max-width: 1100px; margin: 24px auto; }
         .empty-message { color: #b02a37; font-weight: 600; }
         .clickable-row { cursor: pointer; }
@@ -68,7 +67,7 @@
                             <td th:text="${apprenti.telephone}"></td>
                             <td>
                                 <a class="btn btn-sm btn-outline-primary" th:href="@{'/apprenti/' + ${apprenti.apprentiId}}">Modifier</a>
-                                <a class="btn btn-sm btn-outline-danger" th:href="@{'/apprenti/' + ${apprenti.apprentiId} + '/delete'}">Supprimer</a>
+                                <a class="btn btn-sm btn-outline-danger delete-apprenti" th:href="@{'/apprenti/deleteapprenti/' + ${apprenti.apprentiId}}">Supprimer</a>
                             </td>
                         </tr>
                         </tbody>
@@ -80,5 +79,86 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Modal pour afficher la page userinfo en fragment -->
+<div class="modal fade" id="apprentiModal" tabindex="-1" aria-labelledby="apprentiModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="apprentiModalLabel">Détails de l'apprenti</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body" id="apprenti-modal-body">
+                <div class="text-center text-muted">Chargement...</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function(){
+        // Empêche les clics sur les liens contenus dans les lignes d'ouvrir le modal
+        function stopAnchorPropagation() {
+            const anchors = document.querySelectorAll('.clickable-row a');
+            anchors.forEach(a => a.addEventListener('click', function(e){ e.stopPropagation(); }));
+        }
+
+        stopAnchorPropagation();
+
+        // Chargement du fragment via MVC controller (qui appelle le RestController)
+        const rows = document.querySelectorAll('.clickable-row');
+        const modalEl = document.getElementById('apprentiModal');
+        const bsModal = new bootstrap.Modal(modalEl);
+
+        async function loadFragment(id) {
+            const container = document.getElementById('apprenti-modal-body');
+            container.innerHTML = '<div class="text-center text-muted">Chargement...</div>';
+            try {
+                const resp = await fetch('/apprenti/' + id + '/userinfo-fragment', { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+                if (!resp.ok) throw new Error('Erreur ' + resp.status);
+                const html = await resp.text();
+                container.innerHTML = html;
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = '<div class="text-danger">Impossible de charger les informations.</div>';
+            }
+        }
+
+        rows.forEach(row => {
+            row.addEventListener('click', function(){
+                const id = this.getAttribute('data-id');
+                if (!id) return;
+                loadFragment(id);
+                bsModal.show();
+            });
+        });
+
+        // Interception des suppressions : appel direct au REST API (retour 204)
+        const deleteLinks = document.querySelectorAll('.delete-apprenti');
+        deleteLinks.forEach(link => {
+            link.addEventListener('click', async function(e){
+                e.preventDefault();
+                const href = this.getAttribute('href');
+                if (!confirm('Confirmer la suppression de cet apprenti ?')) return;
+                const parts = href.split('/');
+                const id = parts[parts.length -1];
+                try {
+                    const res = await fetch('/api/apprenti/deleteApprenti/' + id, { method: 'DELETE' });
+                    if (res.ok) {
+                        window.location.reload();
+                    } else {
+                        alert('Erreur lors de la suppression : ' + res.status);
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert('Impossible de contacter le serveur pour supprimer.');
+                }
+            });
+        });
+    })();
+</script>
 </body>
 </html>

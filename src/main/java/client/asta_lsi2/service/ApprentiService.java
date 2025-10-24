@@ -49,4 +49,8 @@ public class ApprentiService {
 	public List<Apprenti> findByAnne(int anne){
 		return apprentiRepository.findByApprentiYear(Year.of(anne));
 	}
+
+	public void deleteById(Long id) {
+		apprentiRepository.deleteById(id);
+	}
 }

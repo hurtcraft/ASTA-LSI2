@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +36,24 @@ public class ApprentiRestController {
     @GetMapping("/getApprentiByEmail/{email}")
     public ResponseEntity<Apprenti> getApprentiByEmail(@Parameter(description = "Email de l'apprenti")@PathVariable String email) {
         return apprentiService.findApprentiByEmail(email)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/deleteApprenti/{id}")
+    public ResponseEntity<Void> deleteApprentiById(@PathVariable Long id) {
+        Optional<Apprenti> apprentiOpt = apprentiService.findById(id);
+        if (apprentiOpt.isPresent()) {
+            apprentiService.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/getApprentiById/{id}")
+    public ResponseEntity<Apprenti> getApprentiById(@Parameter(description = "ID de l'apprenti") @PathVariable Long id) {
+        return apprentiService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
