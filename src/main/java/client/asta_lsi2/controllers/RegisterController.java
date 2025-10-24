@@ -2,7 +2,6 @@ package client.asta_lsi2.controllers;
 
 import client.asta_lsi2.models.Apprenti;
 import client.asta_lsi2.models.MaitreApprentissage;
-import client.asta_lsi2.models.requests.LoginRequest;
 import client.asta_lsi2.service.ApprentiService;
 import client.asta_lsi2.service.MaitreApprentissageService;
 import org.springframework.stereotype.Controller;
@@ -27,6 +26,9 @@ public class RegisterController {
     @GetMapping("/apprenti")
     public String registerApprenti(Model model) {
         model.addAttribute("registerApprentiForm", new Apprenti());
+        // TODO: Ajouter les listes de majeurs et programmes
+        // model.addAttribute("majeurs", majeurService.findAll());
+        // model.addAttribute("programmes", programmeService.findAll());
         return "apprenti/register";
     }
 
@@ -38,9 +40,8 @@ public class RegisterController {
 
     @PostMapping("/apprenti")
     public String registerApprentiSubmit(@ModelAttribute Apprenti apprenti, Model model) {
-
         apprentiService.save(apprenti);
-        return "redirect:/login";
+        return "redirect:/dashboard";
     }
 
     @PostMapping("/maitre")
