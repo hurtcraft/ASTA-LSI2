@@ -54,7 +54,7 @@ public class RegisterController {
                 .retrieve()
                 .bodyToMono(String.class)
                 .block(); // appel synchrone (simple pour formulaire)
-        return "redirect:/login";
+        return "redirect:/dashboard";
     }
 
     @PostMapping("/maitre")
@@ -65,7 +65,7 @@ public class RegisterController {
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
-        return "redirect:/login";
+        return "redirect:/dashboard";
     }
 
     @PostMapping("/tuteurEnseignant")
@@ -76,6 +76,6 @@ public class RegisterController {
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
-        return "redirect:/login";
+        return "redirect:/dashboard";
     }
 }
