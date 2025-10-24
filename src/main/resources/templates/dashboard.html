@@ -50,19 +50,18 @@
             <div class="row mb-3">
                 <div class="col-md-6">
                     <div class="btn-group" role="group">
-                        <a class="btn btn-outline-secondary btn-sm" th:href="@{/dashboard}" 
-                           th:classappend="${triActuel == 'aucun'} ? 'active' : ''">
-                            Tous
+                        <a class="btn btn-outline-secondary btn-sm" 
+                           th:href="@{/dashboard(tri='id', inverse=${triActuel == 'id' && !triInverse ? 'true' : 'false'})}" 
+                           th:classappend="${triActuel == 'id'} ? 'active' : ''">
+                            Par ID
                         </a>
-                        <a class="btn btn-outline-secondary btn-sm" th:href="@{/dashboard(tri='date')}" 
-                           th:classappend="${triActuel == 'date'} ? 'active' : ''">
-                            Par date
-                        </a>
-                        <a class="btn btn-outline-secondary btn-sm" th:href="@{/dashboard(tri='programme')}" 
+                        <a class="btn btn-outline-secondary btn-sm" 
+                           th:href="@{/dashboard(tri='programme', inverse=${triActuel == 'programme' && !triInverse ? 'true' : 'false'})}" 
                            th:classappend="${triActuel == 'programme'} ? 'active' : ''">
                             Par programme
                         </a>
-                        <a class="btn btn-outline-secondary btn-sm" th:href="@{/dashboard(tri='nom')}" 
+                        <a class="btn btn-outline-secondary btn-sm" 
+                           th:href="@{/dashboard(tri='nom', inverse=${triActuel == 'nom' && !triInverse ? 'true' : 'false'})}" 
                            th:classappend="${triActuel == 'nom'} ? 'active' : ''">
                             Par nom
                         </a>
@@ -107,11 +106,9 @@
                             <th>Id</th>
                             <th>Nom</th>
                             <th>Prénom</th>
-                            <th>Programme</th>
                             <th>Email</th>
                             <th>Téléphone</th>
                             <th>Programme</th>
-                            <th>Année Académique</th>
                             <th>Actions</th>
                         </tr>
                         </thead>
@@ -121,13 +118,11 @@
                             <td th:text="${apprenti.apprentiId}"></td>
                             <td th:text="${apprenti.apprentiName}"></td>
                             <td th:text="${apprenti.apprentiPrenom}"></td>
-                            <td th:text="${apprenti.programme != null ? apprenti.programme.label : 'N/A'}"></td>
                             <td th:text="${apprenti.apprentiEmail}"></td>
                             <td th:text="${apprenti.telephone}"></td>
                             <td>
                                 <span class="badge bg-primary" th:text="${apprenti.programme != null ? apprenti.programme.label : 'N/A'}"></span>
                             </td>
-                            <td th:text="${apprenti.anneeAcademiqueString}"></td>
                             <td>
                                 <a class="btn btn-sm btn-outline-primary" th:href="@{'/apprenti/' + ${apprenti.apprentiId}}">Modifier</a>
                                 <a class="btn btn-sm btn-outline-danger delete-apprenti" th:href="@{'/apprenti/deleteapprenti/' + ${apprenti.apprentiId}}">Supprimer</a>
