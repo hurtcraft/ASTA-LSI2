@@ -38,19 +38,17 @@
 
                     <div>
                         <label for="majeur" class="form-label">Majeur :</label>
-                        <select id="majeur" th:field="*{majeur}" class="form-select" >
+                        <select id="majeur" th:field="*{majeur.majeurId}" class="form-select" >
                             <option value="" disabled selected>Choisissez un majeur</option>
-                            <!-- TODO: Ajouter les options de majeurs -->
+                            <option th:each="majeur : ${majors}" th:value="${majeur.majeurId}" th:text="${majeur.label}"></option>
                         </select>
                     </div>
 
                     <div>
                         <label for="programme" class="form-label">Programme :</label>
-                        <select id="programme" th:field="*{programme}" class="form-select" >
+                        <select id="programme" th:field="*{programme.programmeId}" class="form-select" >
                             <option value="" disabled selected>Choisissez un programme</option>
-                            <option th:each="programme : ${programmes}" 
-                                    th:value="${programme}" 
-                                    th:text="${programme.label}"></option>
+                            <option th:each="programme : ${programmes}" th:value="${programme.programmeId}" th:text="${programme.label}"></option>
                         </select>
                     </div>
 

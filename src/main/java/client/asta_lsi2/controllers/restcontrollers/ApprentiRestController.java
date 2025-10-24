@@ -3,6 +3,7 @@ package client.asta_lsi2.controllers.restcontrollers;
 
 import client.asta_lsi2.models.Apprenti;
 import client.asta_lsi2.service.ApprentiService;
+import client.asta_lsi2.service.ProgrammeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -27,8 +28,11 @@ import java.util.Optional;
 public class ApprentiRestController {
 
     private final ApprentiService apprentiService;
-    public ApprentiRestController(ApprentiService apprentiService) {
+    private final ProgrammeService programmeService;
+
+    public ApprentiRestController(ApprentiService apprentiService, ProgrammeService programmeService) {
         this.apprentiService = apprentiService;
+        this.programmeService = programmeService;
     }
 
     @Operation(summary = "Récupère un apprenti par email")
@@ -82,7 +86,6 @@ public class ApprentiRestController {
             if (updatedApprenti.getApprentiYear() != null) {
                 existingApprenti.setApprentiYear(updatedApprenti.getApprentiYear());
             }
-            // Relations : remplacer si un objet non-null est fourni (attend généralement un JSON avec l'id)
             if (updatedApprenti.getMajeur() != null) {
                 existingApprenti.setMajeur(updatedApprenti.getMajeur());
             }
@@ -90,7 +93,20 @@ public class ApprentiRestController {
                 existingApprenti.setEntreprise(updatedApprenti.getEntreprise());
             }
             if (updatedApprenti.getProgramme() != null) {
-                existingApprenti.setProgramme(updatedApprenti.getProgramme());
+                if (updatedApprenti.getProgramme().getProgrammeId() != null) {
+                    Long progId = updatedApprenti.getProgramme().getProgrammeId();
+                    var prog = programmeService.findById(progId);
+                    if (prog != null) {
+                        existingApprenti.setProgramme(prog);
+                    }
+                } else if (updatedApprenti.getProgramme().getLabel() != null) {
+                    var prog = programmeService.findByLabel(updatedApprenti.getProgramme().getLabel());
+                    if (prog != null) {
+                        existingApprenti.setProgramme(prog);
+                    }
+                } else {
+                    existingApprenti.setProgramme(updatedApprenti.getProgramme());
+                }
             }
             // Mot de passe : si fourni et non vide, le service l'encodera ; si absent, on le garde tel quel
             if (updatedApprenti.getPassword() != null && !updatedApprenti.getPassword().isBlank()) {

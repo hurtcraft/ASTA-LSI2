@@ -26,6 +26,10 @@ public class ProgrammeService {
     public Programme findById(Long id) {
         return programmeRepository.findById(id).orElse(null);
     }
+
+    public Programme findByLabel(String label) {
+        return programmeRepository.findByLabel(label).orElse(null);
+    }
     
     public void deleteById(Long id) {
         programmeRepository.deleteById(id);
