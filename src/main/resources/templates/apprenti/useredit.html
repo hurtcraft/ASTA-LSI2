@@ -47,11 +47,11 @@
                                 <option th:each="majeur : ${majors}" th:value="${majeur.majeurId}" th:text="${majeur.label}"></option>
                             </select>
                         </div>
-
+                        
                         <div>
                             <label for="programme" class="form-label">Programme :</label>
-                            <select id="programme" th:field="*{programme.programmeId}" class="form-select">
-                                <option value="" disabled>Choisissez un programme</option>
+                            <select id="programme" th:field="*{programme.programmeId}" class="form-select" >
+                                <option value="" disabled selected>Choisissez un programme</option>
                                 <option th:each="programme : ${programmes}" th:value="${programme.programmeId}" th:text="${programme.label}"></option>
                             </select>
                         </div>
