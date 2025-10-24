@@ -31,9 +31,7 @@ public class LoginController {
 
     private final AuthenticationManager authenticationManager;
     private static final Map<String, String> ROLE_HOME_MAP = Map.of(
-            "ROLE_" + Role.APPRENTI.name(), "/apprenti/home",
-            "ROLE_" + Role.MAITRE_APPRENTISSAGE.name(), "/maitre/home"
-
+            "ROLE_" + Role.TUTEUR_ENSEIGNANT, "/tuteurEntreprise/home"
     );
 
     public LoginController(AuthenticationManager authenticationManager) {
