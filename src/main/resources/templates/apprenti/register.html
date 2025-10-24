@@ -48,7 +48,9 @@
                         <label for="programme" class="form-label">Programme :</label>
                         <select id="programme" th:field="*{programme}" class="form-select" >
                             <option value="" disabled selected>Choisissez un programme</option>
-                            <!-- TODO: Ajouter les options de programmes -->
+                            <option th:each="programme : ${programmes}" 
+                                    th:value="${programme}" 
+                                    th:text="${programme.label}"></option>
                         </select>
                     </div>
 

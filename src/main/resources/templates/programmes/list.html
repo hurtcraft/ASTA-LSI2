@@ -2,12 +2,11 @@
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Tableau de bord</title>
+    <title>Gestion des Programmes</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" th:href="@{/css/animation.css}">
     <style>
-        /* petits ajustements pour dashboard reprenant le style du login */
         .card-dashboard { max-width: 1100px; margin: 24px auto; }
         .empty-message { color: #b02a37; font-weight: 600; }
         .clickable-row { cursor: pointer; }
@@ -23,6 +22,7 @@
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link" th:href="@{/dashboard}">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/programmes}">Programmes</a></li>
                 <li class="nav-item"><a class="nav-link" th:href="@{/logout}">Se déconnecter</a></li>
             </ul>
         </div>
@@ -33,43 +33,37 @@
     <div class="card shadow-sm slide-down">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3 class="card-title mb-0">Tableau de bord - Année <span th:text="${currentYear}"></span></h3>
+                <h3 class="card-title mb-0">Gestion des Programmes</h3>
                 <div>
-                    <a class="btn btn-primary btn-sm" th:href="@{/register/apprenti}">Ajouter un apprenti</a>
-                    <a class="btn btn-outline-primary btn-sm ms-2" th:href="@{/programmes}">Gérer les programmes</a>
+                    <a class="btn btn-primary btn-sm" th:href="@{/programmes/add}">Ajouter un programme</a>
+                    <a class="btn btn-outline-secondary btn-sm" th:href="@{/dashboard}">Retour au dashboard</a>
                 </div>
             </div>
 
-            <div th:if="${apprentis.empty}">
-                <div class="alert alert-danger" role="alert">
-                    La liste est vide. Ajoutez au moins un apprenti
+            <div th:if="${programmes.empty}">
+                <div class="alert alert-info" role="alert">
+                    Aucun programme trouvé. Ajoutez votre premier programme.
                 </div>
             </div>
 
-            <div th:unless="${apprentis.empty}">
+            <div th:unless="${programmes.empty}">
                 <div class="table-responsive">
                     <table class="table table-striped table-hover">
                         <thead class="table-light">
                         <tr>
-                            <th>Id</th>
-                            <th>Nom</th>
-                            <th>Prénom</th>
-                            <th>Email</th>
-                            <th>Téléphone</th>
+                            <th>ID</th>
+                            <th>Label</th>
                             <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="apprenti : ${apprentis}" class="clickable-row"
-                            th:attr="data-id=${apprenti.apprentiId},data-name=${apprenti.apprentiName},data-prenom=${apprenti.apprentiPrenom},data-email=${apprenti.apprentiEmail},data-telephone=${apprenti.telephone},data-year=${apprenti.apprentiYear}">
-                            <td th:text="${apprenti.apprentiId}"></td>
-                            <td th:text="${apprenti.apprentiName}"></td>
-                            <td th:text="${apprenti.apprentiPrenom}"></td>
-                            <td th:text="${apprenti.apprentiEmail}"></td>
-                            <td th:text="${apprenti.telephone}"></td>
+                        <tr th:each="programme : ${programmes}">
+                            <td th:text="${programme.programmeId}"></td>
+                            <td th:text="${programme.label}"></td>
                             <td>
-                                <a class="btn btn-sm btn-outline-primary" th:href="@{'/apprenti/' + ${apprenti.apprentiId}}">Modifier</a>
-                                <a class="btn btn-sm btn-outline-danger" th:href="@{'/apprenti/' + ${apprenti.apprentiId} + '/delete'}">Supprimer</a>
+                                <a class="btn btn-sm btn-outline-primary" th:href="@{'/programmes/' + ${programme.programmeId} + '/edit'}">Modifier</a>
+                                <a class="btn btn-sm btn-outline-danger" th:href="@{'/programmes/' + ${programme.programmeId} + '/delete'}" 
+                                   onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce programme ?')">Supprimer</a>
                             </td>
                         </tr>
                         </tbody>

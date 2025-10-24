@@ -4,6 +4,7 @@ import client.asta_lsi2.models.Apprenti;
 import client.asta_lsi2.models.MaitreApprentissage;
 import client.asta_lsi2.service.ApprentiService;
 import client.asta_lsi2.service.MaitreApprentissageService;
+import client.asta_lsi2.service.ProgrammeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,10 +18,12 @@ public class RegisterController {
 
     private final ApprentiService apprentiService;
     private final MaitreApprentissageService maitreApprentissageService;
+    private final ProgrammeService programmeService;
 
-    public RegisterController(ApprentiService apprentiService,MaitreApprentissageService maitreApprentissageService) {
+    public RegisterController(ApprentiService apprentiService,MaitreApprentissageService maitreApprentissageService, ProgrammeService programmeService) {
         this.apprentiService = apprentiService;
         this.maitreApprentissageService = maitreApprentissageService;
+        this.programmeService = programmeService;
     }
 
     @GetMapping("/apprenti")
@@ -28,7 +31,7 @@ public class RegisterController {
         model.addAttribute("registerApprentiForm", new Apprenti());
         // TODO: Ajouter les listes de majeurs et programmes
         // model.addAttribute("majeurs", majeurService.findAll());
-        // model.addAttribute("programmes", programmeService.findAll());
+        model.addAttribute("programmes", programmeService.findAll());
         return "apprenti/register";
     }
 
