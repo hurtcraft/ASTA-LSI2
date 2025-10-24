@@ -24,9 +24,7 @@ public class RechercheController {
 		List<Apprenti> results;
 
 		if (q == null || q.isBlank()) {
-			// Récupère tous les apprentis via API si disponible, sinon vide
 			try {
-				// Si un endpoint REST existe pour tous les apprentis, adaptez ici. Sinon renvoyez vide.
 				results = webClient.get()
 						.uri("/apprenti/all")
 						.retrieve()

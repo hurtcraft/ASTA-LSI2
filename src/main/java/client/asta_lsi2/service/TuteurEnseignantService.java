@@ -2,7 +2,6 @@ package client.asta_lsi2.service;
 
 import client.asta_lsi2.models.Role;
 import client.asta_lsi2.models.TuteurEnseignant;
-import client.asta_lsi2.models.User;
 import client.asta_lsi2.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,10 +9,10 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class TuteurEnseingnantService {
+public class TuteurEnseignantService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    public TuteurEnseingnantService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public TuteurEnseignantService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }

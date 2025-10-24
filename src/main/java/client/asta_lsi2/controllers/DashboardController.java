@@ -1,8 +1,12 @@
 package client.asta_lsi2.controllers;
 
 import client.asta_lsi2.models.Apprenti;
+import client.asta_lsi2.models.TuteurEnseignant;
 import client.asta_lsi2.service.ApprentiService;
-import client.asta_lsi2.service.CustomUserDetailsService;
+import client.asta_lsi2.service.CookiService;
+import client.asta_lsi2.service.TuteurEnseignantService;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.stereotype.Controller;
@@ -15,23 +19,35 @@ import java.time.Year;
 public class DashboardController {
 
     private final ApprentiService apprentiService;
-    private final CustomUserDetailsService customUserDetailsService;
     private final WebClient webClient;
+    private final CookiService cookiService;
+    private final TuteurEnseignantService tuteurEnseignantService;
 
-    public DashboardController(ApprentiService apprentiService, CustomUserDetailsService customUserDetailsService, WebClient webClient)
-    {
+    public DashboardController(ApprentiService apprentiService, WebClient webClient, CookiService cookiService, TuteurEnseignantService tuteurEnseignantService) {
         this.apprentiService = apprentiService;
-        this.customUserDetailsService = customUserDetailsService;
         this.webClient = webClient;
+        this.cookiService = cookiService;
+        this.tuteurEnseignantService = tuteurEnseignantService;
     }
 
-    @GetMapping({ "/dashboard"})
-    public String dashboard(Model model) {
+    @GetMapping({"/dashboard"})
+    public String dashboard(@RequestParam(value = "email", required = false) String emailParam,
+                            Model model) {
         Year currentYear = Year.now();
-        model.addAttribute("currentYear", currentYear);
+
+        String tuteurEmail;
+        if (emailParam != null && !emailParam.isEmpty()) {
+            tuteurEmail = emailParam;
+        } else {
+            tuteurEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        }
+
+        TuteurEnseignant tuteurEnseignant = tuteurEnseignantService.getTuteurEnseignantByEmail(tuteurEmail)
+                .orElse(null);
+        System.out.println(tuteurEnseignant.getNom()+" "+tuteurEnseignant.getPrenom());
+        model.addAttribute("tuteur", tuteurEnseignant);
         model.addAttribute("apprentis", apprentiService.listApprentisForYear(currentYear));
 
-        System.out.println(apprentiService.listApprentisForYear(currentYear));
         return "dashboard";
     }
 
@@ -47,7 +63,6 @@ public class DashboardController {
         sample.setApprentiYear(currentYear);
         sample.setPassword("password");
         apprentiService.save(sample);
-        //customUserDetailsService.saveApprenti(sample);// pour chiffrage du mdp
         return "redirect:/dashboard";
     }
 

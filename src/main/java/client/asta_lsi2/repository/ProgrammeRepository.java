@@ -7,6 +7,5 @@ import java.util.Optional;
 
 @Repository
 public interface ProgrammeRepository extends JpaRepository<Programme, Long> {
-    // The entity uses 'label' as the display property. Provide a finder by label.
     Optional<Programme> findByLabel(String label);
 }

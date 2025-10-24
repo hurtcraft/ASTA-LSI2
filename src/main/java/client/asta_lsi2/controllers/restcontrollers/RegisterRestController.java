@@ -6,7 +6,7 @@ import client.asta_lsi2.models.TuteurEnseignant;
 import client.asta_lsi2.service.ApprentiService;
 import client.asta_lsi2.service.MaitreApprentissageService;
 import client.asta_lsi2.service.ProgrammeService;
-import client.asta_lsi2.service.TuteurEnseingnantService;
+import client.asta_lsi2.service.TuteurEnseignantService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,16 +17,16 @@ public class RegisterRestController {
     private final ApprentiService apprentiService;
     private final MaitreApprentissageService maitreApprentissageService;
     private final ProgrammeService programmeService;
-    private final TuteurEnseingnantService tuteurEnseingnantService;
+    private final TuteurEnseignantService tuteurEnseignantService;
 
     public RegisterRestController(ApprentiService apprentiService,
                                   MaitreApprentissageService maitreApprentissageService,
                                   ProgrammeService programmeService,
-                                  TuteurEnseingnantService tuteurEnseingnantService) {
+                                  TuteurEnseignantService tuteurEnseignantService) {
         this.apprentiService = apprentiService;
         this.maitreApprentissageService = maitreApprentissageService;
         this.programmeService = programmeService;
-        this.tuteurEnseingnantService = tuteurEnseingnantService;
+        this.tuteurEnseignantService = tuteurEnseignantService;
     }
 
     @PostMapping("/apprenti")
@@ -43,7 +43,7 @@ public class RegisterRestController {
 
     @PostMapping("/tuteurEnseignant")
     public ResponseEntity<?> registerTuteur(@RequestBody TuteurEnseignant tuteurEnseignant) {
-        tuteurEnseingnantService.save(tuteurEnseignant);
+        tuteurEnseignantService.save(tuteurEnseignant);
         return ResponseEntity.ok("Tuteur enseignant enregistré avec succès");
     }
 

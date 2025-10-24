@@ -2,11 +2,13 @@ package client.asta_lsi2.controllers;
 
 import client.asta_lsi2.models.Apprenti;
 import client.asta_lsi2.models.MaitreApprentissage;
+import client.asta_lsi2.models.Role;
 import client.asta_lsi2.models.TuteurEnseignant;
-import client.asta_lsi2.service.ApprentiService;
-import client.asta_lsi2.service.MaitreApprentissageService;
 import client.asta_lsi2.service.ProgrammeService;
-import client.asta_lsi2.service.TuteurEnseingnantService;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/register")
@@ -53,7 +58,7 @@ public class RegisterController {
                 .bodyValue(apprenti)
                 .retrieve()
                 .bodyToMono(String.class)
-                .block(); // appel synchrone (simple pour formulaire)
+                .block();
         return "redirect:/dashboard";
     }
 
@@ -76,6 +81,14 @@ public class RegisterController {
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
-        return "redirect:/dashboard";
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                tuteurEnseignant.getEmail(),
+                tuteurEnseignant.getPassword(),
+                List.of(new SimpleGrantedAuthority(Role.TUTEUR_ENSEIGNANT.name()))
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        return "redirect:/dashboard?email=" + tuteurEnseignant.getEmail();
     }
 }

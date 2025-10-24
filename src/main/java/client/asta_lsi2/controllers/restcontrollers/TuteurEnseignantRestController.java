@@ -2,7 +2,7 @@ package client.asta_lsi2.controllers.restcontrollers;
 
 
 import client.asta_lsi2.models.TuteurEnseignant;
-import client.asta_lsi2.service.TuteurEnseingnantService;
+import client.asta_lsi2.service.TuteurEnseignantService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,10 +11,10 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/tuteurEnseignant")
 public class TuteurEnseignantRestController {
-    private final TuteurEnseingnantService tuteurEnseignantService;
+    private final TuteurEnseignantService tuteurEnseignantService;
 
-    public TuteurEnseignantRestController(TuteurEnseingnantService tuteurEnseingnantService) {
-        this.tuteurEnseignantService = tuteurEnseingnantService;
+    public TuteurEnseignantRestController(TuteurEnseignantService tuteurEnseignantService) {
+        this.tuteurEnseignantService = tuteurEnseignantService;
     }
     @PostMapping("/save")
     public ResponseEntity<TuteurEnseignant> saveTuteur(@RequestBody TuteurEnseignant tuteur) {
@@ -28,6 +28,7 @@ public class TuteurEnseignantRestController {
         return tuteur.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
 
 
 }
