@@ -56,4 +56,10 @@ public class SearchRestController {
             @PathVariable int anne) {
         return ResponseEntity.ok(searchService.findByAnne(anne));
     }
+
+        @Operation(summary = "Récupérer tous les apprentis", description = "Renvoie la liste complète de tous les apprentis")
+        @GetMapping("/all")
+        public ResponseEntity<List<Apprenti>> getAllApprentis() {
+            return ResponseEntity.ok(searchService.findAllApprentis());
+        }
 }

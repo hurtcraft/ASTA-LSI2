@@ -27,4 +27,8 @@ public class SearchService {
     public List<Apprenti> findByAnne(int anne) {
         return apprentiService.findByAnne(anne);
     }
+
+        public List<Apprenti> findAllApprentis() {
+            return apprentiService.findAll();
+        }
 }

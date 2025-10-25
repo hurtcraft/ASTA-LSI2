@@ -85,7 +85,7 @@
                     <div class="col-md-6 text-md-end">
                         <button id="sortAZ" class="btn btn-sm btn-outline-secondary">Trier A-Z</button>
                         <button id="sortZA" class="btn btn-sm btn-outline-secondary ms-2">Trier Z-A</button>
-                        <button id="clearSearch" class="btn btn-sm btn-outline-danger ms-2" style="display:none;">
+                        <button id="clearSearch" class="btn btn-sm btn-outline-danger ms-2" style="display:none;" th:href="@{/dashboard}">
                             Réinitialiser
                         </button>
                     </div>
@@ -316,7 +316,7 @@
                     if (!trimmed) {
                         suggestBox.style.display = 'none';
                         clearBtn.style.display = 'none';
-                        fetchRows(currentYear).catch(() => {
+                        fetchRows('').catch(() => {
                         });
                         return;
                     }
@@ -341,8 +341,8 @@
                 searchInput.value = '';
                 suggestBox.style.display = 'none';
                 clearBtn.style.display = 'none';
-                // Recharger la liste par défaut (année courante)
-                fetchRows(currentYear).catch(() => {
+                // Recharger sans query (le serveur utilisera l'année courante)
+                fetchRows('').catch(() => {
                 });
             });
         }

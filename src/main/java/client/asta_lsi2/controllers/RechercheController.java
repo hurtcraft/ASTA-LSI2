@@ -24,30 +24,36 @@ public class RechercheController {
 		List<Apprenti> results;
 
 		if (q == null || q.isBlank()) {
+			// Retourner tous les apprentis quand query vide
 			try {
 				results = webClient.get()
-						.uri("/apprenti/all")
+						.uri("/search/all")
 						.retrieve()
 						.bodyToFlux(Apprenti.class)
 						.collectList()
-						.onErrorReturn(Collections.emptyList())
-						.block();
+						.blockOptional()
+						.orElse(Collections.emptyList());
 			} catch (Exception e) {
 				results = Collections.emptyList();
 			}
 		} else {
 			String query = q.trim();
+			
+			// Si c'est une année numérique, chercher uniquement par année
+			try {
+				int annee = Integer.parseInt(query);
+				results = callSearchEndpoint("/search/searchByAnne/{val}", annee);
+				model.addAttribute("apprentis", results);
+				return "fragments/apprenti-rows :: rows";
+			} catch (NumberFormatException ignored) {}
+			
+			// Sinon combiner les recherches
 			Set<Apprenti> set = new LinkedHashSet<>();
 
 			// Appels aux endpoints REST de SearchRestController (base /api/search)
 			try { set.addAll(callSearchEndpoint("/search/searchByName/{val}", query)); } catch (Exception ignored) {}
 			try { set.addAll(callSearchEndpoint("/search/searchByEntreprise/{val}", query)); } catch (Exception ignored) {}
 			try { set.addAll(callSearchEndpoint("/search/searchByMotCle/{val}", query)); } catch (Exception ignored) {}
-
-			try {
-				int annee = Integer.parseInt(query);
-				set.addAll(callSearchEndpoint("/search/searchByAnne/{val}", annee));
-			} catch (NumberFormatException ignored) {}
 
 			results = new ArrayList<>(set);
 		}
