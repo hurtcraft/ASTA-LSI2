@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -79,6 +80,17 @@
                                     th:text="${programme.label}"
                                     th:selected="${registerApprentiForm.programme != null && registerApprentiForm.programme.name() == programme.name()}"></option>
                         </select>
+                    </div>
+
+                    <div class="row g-2">
+                        <div class="col">
+                            <label for="anneeAcademiqueDebut" class="form-label">Année académique début :</label>
+                            <input type="text" id="anneeAcademiqueDebut" name="anneeAcademiqueDebut" class="form-control" placeholder="2025" />
+                        </div>
+                        <div class="col">
+                            <label for="anneeAcademiqueFin" class="form-label">Année académique fin :</label>
+                            <input type="text" id="anneeAcademiqueFin" name="anneeAcademiqueFin" class="form-control" placeholder="2026" />
+                        </div>
                     </div>
 
                     <div>
