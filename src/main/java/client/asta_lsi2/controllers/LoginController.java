@@ -82,6 +82,8 @@ public class LoginController {
             return "redirect:"+ redirectUrl.orElse("/login");
         } catch (AuthenticationException ex) {
             System.out.println("Échec de connexion pour : " + loginRequest.getEmail());
+            redirectAttributes.addFlashAttribute("errorMessage", "Email ou mot de passe incorrect.");
+
             return "redirect:/login?error";
         }
     }
