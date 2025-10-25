@@ -2,7 +2,6 @@ package client.asta_lsi2.controllers.restcontrollers;
 
 
 import client.asta_lsi2.models.Apprenti;
-import client.asta_lsi2.service.ApprentiService;
 import client.asta_lsi2.service.SearchService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

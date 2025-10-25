@@ -38,7 +38,7 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h3 class="card-title mb-0">Tableau de bord - Année académique <span th:text="${currentYear}"></span>-<span th:text="${currentYear != null ? currentYear.plusYears(1) : 'N/A'}"></span></h3>
                 <div>
-                    <a class="btn btn-primary btn-sm" th:href="@{/register/apprenti}">Ajouter un apprenti</a>
+                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addApprentiModal">Ajouter un apprenti</button>
                     <a class="btn btn-outline-primary btn-sm ms-2" th:href="@{/majeurs}">Gérer les majeurs</a>
                     <a class="btn btn-outline-warning btn-sm ms-2" th:href="@{/annee-academique}">
                         Gérer les années
@@ -124,7 +124,7 @@
                                 <span class="badge bg-primary" th:text="${apprenti.programme != null ? apprenti.programme.label : 'N/A'}"></span>
                             </td>
                             <td>
-                                <a class="btn btn-sm btn-outline-primary" th:href="@{'/apprenti/' + ${apprenti.apprentiId}}">Modifier</a>
+                                <a class="btn btn-sm btn-outline-primary" th:href="@{'/apprenti/edit/' + ${apprenti.apprentiId}}">Modifier</a>
                                 <a class="btn btn-sm btn-outline-danger delete-apprenti" th:href="@{'/apprenti/deleteapprenti/' + ${apprenti.apprentiId}}">Supprimer</a>
                             </td>
                         </tr>
@@ -137,6 +137,148 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Modal: Ajouter Apprenti -->
+<div class="modal fade" id="addApprentiModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ajouter un apprenti</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="apprenti-create-form" class="d-flex flex-column gap-3">
+                    <div class="row g-2">
+                        <div class="col">
+                            <label class="form-label">Nom</label>
+                            <input class="form-control" name="apprentiName" required />
+                        </div>
+                        <div class="col">
+                            <label class="form-label">Prénom</label>
+                            <input class="form-control" name="apprentiPrenom" required />
+                        </div>
+                    </div>
+                    <div class="row g-2">
+                        <div class="col">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="apprentiEmail" required />
+                        </div>
+                        <div class="col">
+                            <label class="form-label">Téléphone</label>
+                            <input class="form-control" name="telephone" />
+                        </div>
+                    </div>
+                    <div class="row g-2">
+                        <div class="col">
+                            <label class="form-label">Année de début</label>
+                            <input type="number" class="form-control" name="anneeDebut" min="2000" max="2100" value="" placeholder="2025" required />
+                        </div>
+                        <div class="col">
+                            <label class="form-label">Programme</label>
+                            <select class="form-select" id="programme-create" required></select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="form-label">Entreprise</label>
+                        <div class="input-group">
+                            <select class="form-select" id="entreprise-create">
+                                <option value="">— Aucune —</option>
+                            </select>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addEntrepriseModal">Ajouter</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="form-label">Maître d'apprentissage</label>
+                        <div class="input-group">
+                            <select class="form-select" id="maitre-create">
+                                <option value="">— Aucun —</option>
+                            </select>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addMaitreModal">Ajouter</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary" id="save-apprenti">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Ajouter Entreprise (réutilisé pour création rapide) -->
+<div class="modal fade" id="addEntrepriseModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ajouter une entreprise</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="entreprise-form" class="d-flex flex-column gap-3">
+                    <div>
+                        <label class="form-label">Raison sociale</label>
+                        <input class="form-control" name="raisonSociale" required />
+                    </div>
+                    <div>
+                        <label class="form-label">Adresse</label>
+                        <input class="form-control" name="entrepriseAdresse" />
+                    </div>
+                    <div>
+                        <label class="form-label">Infos accès locaux</label>
+                        <textarea class="form-control" name="infoAccesLocaux" rows="2"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary" id="save-entreprise">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Ajouter Maître d'apprentissage (réutilisé pour création rapide) -->
+<div class="modal fade" id="addMaitreModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ajouter un maître d'apprentissage</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="maitre-form" class="d-flex flex-column gap-3">
+                    <div class="row g-2">
+                        <div class="col">
+                            <label class="form-label">Nom</label>
+                            <input class="form-control" name="maNom" required />
+                        </div>
+                        <div class="col">
+                            <label class="form-label">Prénom</label>
+                            <input class="form-control" name="maPrenom" required />
+                        </div>
+                    </div>
+                    <div>
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" name="maEmail" required />
+                    </div>
+                    <div>
+                        <label class="form-label">Téléphone</label>
+                        <input class="form-control" name="maTelephone" />
+                    </div>
+                    <div>
+                        <label class="form-label">Remarque</label>
+                        <textarea class="form-control" name="maRemarque" rows="2"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary" id="save-maitre">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="modal fade" id="apprentiModal" tabindex="-1" aria-labelledby="apprentiModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -157,6 +299,152 @@
 
 <script>
     (function () {
+                // Peupler les selects du modal d'ajout d'apprenti au moment de l'ouverture
+                const addApprentiModal = document.getElementById('addApprentiModal');
+                addApprentiModal?.addEventListener('show.bs.modal', async function () {
+                        try {
+                                const [progRes, entRes, maRes] = await Promise.all([
+                                    fetch('/api/register/programmes'),
+                                    fetch('/api/entreprises/all'),
+                                    fetch('/api/maitre/all')
+                                ]);
+                                const programmes = progRes.ok ? await progRes.json() : [];
+                                const entreprises = entRes.ok ? await entRes.json() : [];
+                                const maitres = maRes.ok ? await maRes.json() : [];
+
+                                const progSel = document.getElementById('programme-create');
+                                const entSel = document.getElementById('entreprise-create');
+                                const maSel = document.getElementById('maitre-create');
+                                if (progSel) {
+                                    progSel.innerHTML = '';
+                                    // programmes renvoie un tableau d'enums {name,label}? si c'est juste des noms, fallback
+                                    if (Array.isArray(programmes)) {
+                                        programmes.forEach(p => {
+                                            const opt = document.createElement('option');
+                                            opt.value = (p.name || p); // p peut être une string
+                                            opt.textContent = (p.label || p.name || p);
+                                            progSel.appendChild(opt);
+                                        });
+                                    }
+                                }
+                                if (entSel) {
+                                    entSel.innerHTML = '<option value="">— Aucune —</option>';
+                                    entreprises.forEach(e => {
+                                        const opt = document.createElement('option');
+                                        opt.value = e.entrepriseId;
+                                        opt.textContent = e.raisonSociale;
+                                        entSel.appendChild(opt);
+                                    });
+                                }
+                                if (maSel) {
+                                    maSel.innerHTML = '<option value="">— Aucun —</option>';
+                                    maitres.forEach(m => {
+                                        const opt = document.createElement('option');
+                                        opt.value = m.maId;
+                                        opt.textContent = `${m.maNom} ${m.maPrenom}`;
+                                        maSel.appendChild(opt);
+                                    });
+                                }
+                        } catch (e) {
+                                console.error('Chargement des listes échoué', e);
+                        }
+                });
+
+                // Sauvegarde de l'entreprise depuis le modal rapide et MAJ du select
+                const entrepriseForm = document.getElementById('entreprise-form');
+                const saveEntrepriseBtn = document.getElementById('save-entreprise');
+                const entrepriseSelectCreate = document.getElementById('entreprise-create');
+                saveEntrepriseBtn?.addEventListener('click', async () => {
+                    const data = Object.fromEntries(new FormData(entrepriseForm).entries());
+                    const res = await fetch('/api/entreprises', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                    if (res.ok) {
+                        const created = await res.json();
+                        const opt = document.createElement('option');
+                        opt.value = created.entrepriseId;
+                        opt.textContent = created.raisonSociale;
+                        entrepriseSelectCreate.appendChild(opt);
+                        entrepriseSelectCreate.value = String(created.entrepriseId);
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('addEntrepriseModal'));
+                        modal?.hide();
+                        entrepriseForm.reset();
+                    }
+                });
+
+                // Sauvegarde du maître depuis le modal rapide et MAJ du select
+                const maitreForm = document.getElementById('maitre-form');
+                const saveMaitreBtn = document.getElementById('save-maitre');
+                const maitreSelectCreate = document.getElementById('maitre-create');
+                saveMaitreBtn?.addEventListener('click', async () => {
+                    const data = Object.fromEntries(new FormData(maitreForm).entries());
+                    const res = await fetch('/api/maitre', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                    if (res.ok) {
+                        const created = await res.json();
+                        const opt = document.createElement('option');
+                        opt.value = created.maId;
+                        opt.textContent = `${created.maNom} ${created.maPrenom}`;
+                        maitreSelectCreate.appendChild(opt);
+                        maitreSelectCreate.value = String(created.maId);
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('addMaitreModal'));
+                        modal?.hide();
+                        maitreForm.reset();
+                    }
+                });
+
+                // Création de l'apprenti
+                const apprentiCreateForm = document.getElementById('apprenti-create-form');
+                const saveApprentiBtn = document.getElementById('save-apprenti');
+                saveApprentiBtn?.addEventListener('click', async () => {
+                    const formData = new FormData(apprentiCreateForm);
+                    const data = Object.fromEntries(formData.entries());
+                    const programme = document.getElementById('programme-create').value;
+                    const entId = document.getElementById('entreprise-create').value;
+                    const maId = document.getElementById('maitre-create').value;
+                    const debut = parseInt(data.anneeDebut, 10);
+                    if (!debut || !programme || !data.apprentiName || !data.apprentiPrenom || !data.apprentiEmail) {
+                        alert('Veuillez renseigner les champs requis.');
+                        return;
+                    }
+                                const payload = {
+                        apprentiName: data.apprentiName,
+                        apprentiPrenom: data.apprentiPrenom,
+                        apprentiEmail: data.apprentiEmail,
+                        telephone: data.telephone || null,
+                        programme: programme,
+                                    anneeAcademiqueDebut: String(debut),
+                                    anneeAcademiqueFin: String(debut + 1),
+                        entreprise: entId ? { entrepriseId: parseInt(entId, 10) } : null,
+                        maitreApprentissage: maId ? { maId: parseInt(maId, 10) } : null
+                    };
+                    try {
+                        const res = await fetch('/api/register/apprenti', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        if (res.ok) {
+                            const modal = bootstrap.Modal.getInstance(document.getElementById('addApprentiModal'));
+                            modal?.hide();
+                            apprentiCreateForm.reset();
+                            // Recharger la page pour voir le nouvel apprenti
+                            window.location.reload();
+                        } else {
+                            const text = await res.text();
+                            alert('Erreur lors de la création: ' + res.status + ' ' + text);
+                        }
+                    } catch (e) {
+                        console.error(e);
+                        alert('Impossible de contacter le serveur.');
+                    }
+                });
+
         // Empêche les clics sur les liens contenus dans les lignes d'ouvrir le modal
         function stopAnchorPropagation() {
             const anchors = document.querySelectorAll('.clickable-row a');

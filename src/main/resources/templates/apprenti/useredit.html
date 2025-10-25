@@ -49,6 +49,28 @@
                             <option th:each="m : ${majors}" th:value="${m.majeurId}" th:text="${m.label}"></option>
                         </select>
                     </div>
+
+                    <div>
+                        <label for="entreprise" class="form-label">Entreprise :</label>
+                        <div class="input-group">
+                            <select id="entreprise" th:field="*{entreprise.entrepriseId}" class="form-select">
+                                <option value="" th:selected="${apprenti.entreprise == null}">Choisissez une entreprise</option>
+                                <option th:each="e : ${entreprises}" th:value="${e.entrepriseId}" th:text="${e.raisonSociale}"></option>
+                            </select>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addEntrepriseModal">Ajouter</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="maitre" class="form-label">Maître d'apprentissage :</label>
+                        <div class="input-group">
+                            <select id="maitre" th:field="*{maitreApprentissage.maId}" class="form-select">
+                                <option value="" th:selected="${apprenti.maitreApprentissage == null}">Choisissez un maître</option>
+                                <option th:each="ma : ${maitres}" th:value="${ma.maId}" th:text="${ma.maNom + ' ' + ma.maPrenom}"></option>
+                            </select>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addMaitreModal">Ajouter</button>
+                        </div>
+                    </div>
                     
                     <div>
                         <label for="programme" class="form-label">Programme :</label>
@@ -71,6 +93,129 @@
     </div>
 </div>
 
+<!-- Modal: Ajouter Entreprise -->
+<div class="modal fade" id="addEntrepriseModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ajouter une entreprise</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="entreprise-form" class="d-flex flex-column gap-3">
+                    <div>
+                        <label class="form-label">Raison sociale</label>
+                        <input class="form-control" name="raisonSociale" required />
+                    </div>
+                    <div>
+                        <label class="form-label">Adresse</label>
+                        <input class="form-control" name="entrepriseAdresse" />
+                    </div>
+                    <div>
+                        <label class="form-label">Infos accès locaux</label>
+                        <textarea class="form-control" name="infoAccesLocaux" rows="2"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary" id="save-entreprise">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+    </div>
+
+<!-- Modal: Ajouter Maître d'apprentissage -->
+<div class="modal fade" id="addMaitreModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ajouter un maître d'apprentissage</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="maitre-form" class="d-flex flex-column gap-3">
+                    <div class="row g-2">
+                        <div class="col">
+                            <label class="form-label">Nom</label>
+                            <input class="form-control" name="maNom" required />
+                        </div>
+                        <div class="col">
+                            <label class="form-label">Prénom</label>
+                            <input class="form-control" name="maPrenom" required />
+                        </div>
+                    </div>
+                    <div>
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" name="maEmail" required />
+                    </div>
+                    <div>
+                        <label class="form-label">Téléphone</label>
+                        <input class="form-control" name="maTelephone" />
+                    </div>
+                    <div>
+                        <label class="form-label">Remarque</label>
+                        <textarea class="form-control" name="maRemarque" rows="2"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary" id="save-maitre">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+    </div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const entrepriseForm = document.getElementById('entreprise-form');
+    const saveEntrepriseBtn = document.getElementById('save-entreprise');
+    const entrepriseSelect = document.getElementById('entreprise');
+
+    saveEntrepriseBtn?.addEventListener('click', async () => {
+        const data = Object.fromEntries(new FormData(entrepriseForm).entries());
+        const res = await fetch('/api/entreprises', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        if (res.ok) {
+            const created = await res.json();
+            const opt = document.createElement('option');
+            opt.value = created.entrepriseId;
+            opt.textContent = created.raisonSociale;
+            entrepriseSelect.appendChild(opt);
+            entrepriseSelect.value = String(created.entrepriseId);
+            const modal = bootstrap.Modal.getInstance(document.getElementById('addEntrepriseModal'));
+            modal?.hide();
+            entrepriseForm.reset();
+        }
+    });
+
+    const maitreForm = document.getElementById('maitre-form');
+    const saveMaitreBtn = document.getElementById('save-maitre');
+    const maitreSelect = document.getElementById('maitre');
+
+    saveMaitreBtn?.addEventListener('click', async () => {
+        const data = Object.fromEntries(new FormData(maitreForm).entries());
+        const res = await fetch('/api/maitre', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        if (res.ok) {
+            const created = await res.json();
+            const opt = document.createElement('option');
+            opt.value = created.maId;
+            opt.textContent = `${created.maNom} ${created.maPrenom}`;
+            maitreSelect.appendChild(opt);
+            maitreSelect.value = String(created.maId);
+            const modal = bootstrap.Modal.getInstance(document.getElementById('addMaitreModal'));
+            modal?.hide();
+            maitreForm.reset();
+        }
+    });
+</script>
 </body>
 </html>

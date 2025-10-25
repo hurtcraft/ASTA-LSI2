@@ -20,8 +20,9 @@ public class MaitreApprentissageService {
 
 
     public void save(MaitreApprentissage maitreApprentissage) {
-
-        maitreApprentissage.setPassword(passwordEncoder.encode(maitreApprentissage.getPassword()));
+        if (maitreApprentissage.getPassword() != null && !maitreApprentissage.getPassword().isBlank()) {
+            maitreApprentissage.setPassword(passwordEncoder.encode(maitreApprentissage.getPassword()));
+        }
         maitreApprentissageRepository.save(maitreApprentissage);
     }
     public Optional<MaitreApprentissage> findByEmail(String email) {
@@ -29,5 +30,13 @@ public class MaitreApprentissageService {
     }
     public boolean maitreExistsByEmail(String email) {
         return maitreApprentissageRepository.existsByMaEmail(email);
+    }
+
+    public java.util.List<MaitreApprentissage> findAll() {
+        return maitreApprentissageRepository.findAll();
+    }
+
+    public Optional<MaitreApprentissage> findById(Long id) {
+        return maitreApprentissageRepository.findById(id);
     }
 }

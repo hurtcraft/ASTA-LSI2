@@ -41,6 +41,10 @@ public class Apprenti {
     @JoinColumn(name="entrepriseId")
     private Entreprise entreprise;
 
+    @ManyToOne
+    @JoinColumn(name = "maId")
+    private MaitreApprentissage maitreApprentissage;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Programme programme;

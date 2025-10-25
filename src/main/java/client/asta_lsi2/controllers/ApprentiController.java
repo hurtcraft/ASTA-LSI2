@@ -107,6 +107,25 @@ public class ApprentiController {
         model.addAttribute("apprenti", apprenti);
         // Populate programmes for select preselection
         model.addAttribute("programmes", Programme.values());
+    // Fetch entreprises and maitres via REST
+    var entreprises = webClient.get()
+        .uri("/entreprises/all")
+        .cookies(c -> c.add("JSESSIONID", finalJsessionId))
+        .retrieve()
+        .bodyToFlux(client.asta_lsi2.models.Entreprise.class)
+        .collectList()
+        .blockOptional()
+        .orElse(java.util.Collections.emptyList());
+    var maitres = webClient.get()
+        .uri("/maitre/all")
+        .cookies(c -> c.add("JSESSIONID", finalJsessionId))
+        .retrieve()
+        .bodyToFlux(client.asta_lsi2.models.MaitreApprentissage.class)
+        .collectList()
+        .blockOptional()
+        .orElse(java.util.Collections.emptyList());
+    model.addAttribute("entreprises", entreprises);
+    model.addAttribute("maitres", maitres);
         return "apprenti/useredit";
     }
 
@@ -132,5 +151,29 @@ public class ApprentiController {
                 .block();
 
         return "redirect:/dashboard";
+    }
+
+    @GetMapping("/{id}/userinfo-fragment")
+    public String getUserInfoFragment(@PathVariable Long id, Model model, Authentication authentication, HttpServletRequest request) {
+        String jsessionId = null;
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("JSESSIONID".equals(cookie.getName())) {
+                    jsessionId = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        String finalJsessionId = jsessionId;
+        Apprenti apprenti = webClient.get()
+                .uri("/apprenti/getApprentiById/{id}", id)
+                .cookies(c -> c.add("JSESSIONID", finalJsessionId))
+                .retrieve()
+                .bodyToMono(Apprenti.class)
+                .block();
+
+        model.addAttribute("apprenti", apprenti);
+        return "apprenti/userinfo :: userinfoFragment";
     }
 }

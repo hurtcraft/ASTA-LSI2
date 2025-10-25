@@ -90,6 +90,9 @@ public class ApprentiRestController {
             if (updatedApprenti.getEntreprise() != null) {
                 existingApprenti.setEntreprise(updatedApprenti.getEntreprise());
             }
+            if (updatedApprenti.getMaitreApprentissage() != null) {
+                existingApprenti.setMaitreApprentissage(updatedApprenti.getMaitreApprentissage());
+            }
             if (updatedApprenti.getProgramme() != null) {
                 existingApprenti.setProgramme(updatedApprenti.getProgramme());
             }
