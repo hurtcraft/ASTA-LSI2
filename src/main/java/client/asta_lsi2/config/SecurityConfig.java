@@ -1,20 +1,14 @@
 package client.asta_lsi2.config;
 
-import client.asta_lsi2.models.Role;
 import client.asta_lsi2.service.CustomUserDetailsService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -44,14 +38,19 @@ public class SecurityConfig {
 //    }
 @Bean
 public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    return http.csrf(csrf -> csrf.disable())// à activer en prod
-            .authorizeHttpRequests(
-                    authorizeRequests -> authorizeRequests
-                            .requestMatchers( "/**").permitAll()
-                            .anyRequest()
-                            .authenticated()
-            )
-            .build();
+    return http
+        // CSRF désactivé pour simplifier les formulaires/JS (à réactiver et configurer en prod)
+        .csrf(csrf -> csrf.disable())
+        // Autorisations (ici tout est accessible; affiner selon les rôles si besoin)
+        .authorizeHttpRequests(authorize -> authorize
+            .requestMatchers("/**").permitAll()
+            .anyRequest().authenticated()
+        )
+        // Autoriser l'affichage des pages dans une iframe sur la même origine (ex: dashboard -> iframe /register)
+        .headers(headers -> headers
+            .frameOptions(frameOptions -> frameOptions.sameOrigin())
+        )
+        .build();
 }
 
     @Bean

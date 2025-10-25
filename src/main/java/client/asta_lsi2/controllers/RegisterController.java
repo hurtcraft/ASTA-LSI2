@@ -47,7 +47,31 @@ public class RegisterController {
         model.addAttribute("registerApprentiForm", new Apprenti());
         model.addAttribute("majeurs", majeurService.findAll());
         model.addAttribute("programmes", Programme.values());
+        // Charger entreprises et maîtres pour le formulaire
+        var entreprises = webClient.get()
+                .uri("/entreprises/all")
+                .retrieve()
+                .bodyToFlux(client.asta_lsi2.models.Entreprise.class)
+                .collectList()
+                .blockOptional()
+                .orElse(java.util.Collections.emptyList());
+        var maitres = webClient.get()
+                .uri("/maitre/all")
+                .retrieve()
+                .bodyToFlux(client.asta_lsi2.models.MaitreApprentissage.class)
+                .collectList()
+                .blockOptional()
+                .orElse(java.util.Collections.emptyList());
+        model.addAttribute("entreprises", entreprises);
+        model.addAttribute("maitres", maitres);
         return "apprenti/register";
+    }
+
+    @GetMapping("/apprenti/fragment")
+    public String registerApprentiFragment(Model model) {
+        // Réutilise la méthode précédente pour remplir le modèle
+        registerApprenti(model);
+        return "apprenti/register :: registerForm";
     }
 
     @GetMapping("/maitre")
