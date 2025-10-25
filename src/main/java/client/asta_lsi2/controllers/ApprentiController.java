@@ -107,6 +107,7 @@ public class ApprentiController {
         model.addAttribute("apprenti", apprenti);
         // Populate programmes for select preselection
         model.addAttribute("programmes", Programme.values());
+    // Fetch entreprises, maitres, and majors via REST
     // Fetch entreprises and maitres via REST
     var entreprises = webClient.get()
         .uri("/entreprises/all")
@@ -124,8 +125,17 @@ public class ApprentiController {
         .collectList()
         .blockOptional()
         .orElse(java.util.Collections.emptyList());
+    var majors = webClient.get()
+        .uri("/majeurs/all")
+        .cookies(c -> c.add("JSESSIONID", finalJsessionId))
+        .retrieve()
+        .bodyToFlux(client.asta_lsi2.models.Majeur.class)
+        .collectList()
+        .blockOptional()
+        .orElse(java.util.Collections.emptyList());
     model.addAttribute("entreprises", entreprises);
     model.addAttribute("maitres", maitres);
+    model.addAttribute("majors", majors);
         return "apprenti/useredit";
     }
 
