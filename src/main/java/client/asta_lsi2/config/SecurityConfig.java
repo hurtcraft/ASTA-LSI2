@@ -1,5 +1,6 @@
 package client.asta_lsi2.config;
 
+import client.asta_lsi2.models.Role;
 import client.asta_lsi2.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,7 +44,8 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
         .csrf(csrf -> csrf.disable())
         // Autorisations (ici tout est accessible; affiner selon les rôles si besoin)
         .authorizeHttpRequests(authorize -> authorize
-            .requestMatchers("/**").permitAll()
+                .requestMatchers("/","/login","/register/**","/logout","/api/register/tuteurEnseignant").permitAll()
+                .requestMatchers( "/api/**","/dashboard/**","/**").hasRole(Role.TUTEUR_ENSEIGNANT.name())
             .anyRequest().authenticated()
         )
         // Autoriser l'affichage des pages dans une iframe sur la même origine (ex: dashboard -> iframe /register)

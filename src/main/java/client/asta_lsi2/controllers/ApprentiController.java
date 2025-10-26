@@ -3,6 +3,7 @@ package client.asta_lsi2.controllers;
 
 import client.asta_lsi2.models.Apprenti;
 import client.asta_lsi2.models.Programme;
+import client.asta_lsi2.service.CookiService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -24,9 +25,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class ApprentiController {
 
     private final WebClient webClient; //pointe sur http://localhost:8080/api par défaut
-
-    public ApprentiController(WebClient webClient) {
+    private final CookiService cookieService;
+    public ApprentiController(WebClient webClient,CookiService cookieService)
+    {
         this.webClient = webClient;
+        this.cookieService = cookieService;
     }
 
 
@@ -34,20 +37,12 @@ public class ApprentiController {
 
     @GetMapping("/home")
     public String apprentiHome(Model model, Authentication authentication, HttpServletRequest request) {
-        String jsessionId = null;
-        if (request.getCookies() != null) {
-            for (Cookie cookie : request.getCookies()) {
-                if ("JSESSIONID".equals(cookie.getName())) {
-                    jsessionId = cookie.getValue();
-                    break;
-                }
-            }
-        }
+        String jsessionId = cookieService.getJSessionId(request);
 
-        String finalJsessionId = jsessionId;
+
         Apprenti apprenti = webClient.get()
                 .uri("/apprenti/getApprentiByEmail/{email}", authentication.getName())
-                .cookies(c -> c.add("JSESSIONID", finalJsessionId))
+                .cookies(c -> c.add("JSESSIONID", jsessionId))
                 .retrieve()
                 .bodyToMono(Apprenti.class)
                 .block();
@@ -58,20 +53,12 @@ public class ApprentiController {
 
     @DeleteMapping("/deleteapprenti/{id}")
     public String deleteApprenti(@PathVariable Long id, Authentication authentication, HttpServletRequest request) {
-        String jsessionId = null;
-        if (request.getCookies() != null) {
-            for (Cookie cookie : request.getCookies()) {
-                if ("JSESSIONID".equals(cookie.getName())) {
-                    jsessionId = cookie.getValue();
-                    break;
-                }
-            }
-        }
+        String jsessionId = cookieService.getJSessionId(request);
 
-        String finalJsessionId = jsessionId;
+
         HttpStatusCode statusCode = webClient.delete()
                 .uri("/deleteApprenti/{id}", id)
-                .cookies(c -> c.add("JSESSIONID", finalJsessionId))
+                .cookies(c -> c.add("JSESSIONID", jsessionId))
                 .retrieve()
                 .toBodilessEntity()
                 .map(response -> response.getStatusCode())
@@ -86,20 +73,12 @@ public class ApprentiController {
 
     @GetMapping("/edit/{id}")
     public String editApprenti(@PathVariable Long id, Model model, Authentication authentication, HttpServletRequest request) {
-        String jsessionId = null;
-        if (request.getCookies() != null) {
-            for (Cookie cookie : request.getCookies()) {
-                if ("JSESSIONID".equals(cookie.getName())) {
-                    jsessionId = cookie.getValue();
-                    break;
-                }
-            }
-        }
+        String jsessionId = cookieService.getJSessionId(request);
 
-        String finalJsessionId = jsessionId;
+
         Apprenti apprenti = webClient.get()
                 .uri("/apprenti/getApprentiById/{id}", id)
-                .cookies(c -> c.add("JSESSIONID", finalJsessionId))
+                .cookies(c -> c.add("JSESSIONID", jsessionId))
                 .retrieve()
                 .bodyToMono(Apprenti.class)
                 .block();
@@ -111,7 +90,7 @@ public class ApprentiController {
     // Fetch entreprises and maitres via REST
     var entreprises = webClient.get()
         .uri("/entreprises/all")
-        .cookies(c -> c.add("JSESSIONID", finalJsessionId))
+        .cookies(c -> c.add("JSESSIONID", jsessionId))
         .retrieve()
         .bodyToFlux(client.asta_lsi2.models.Entreprise.class)
         .collectList()
@@ -119,7 +98,7 @@ public class ApprentiController {
         .orElse(java.util.Collections.emptyList());
     var maitres = webClient.get()
         .uri("/maitre/all")
-        .cookies(c -> c.add("JSESSIONID", finalJsessionId))
+        .cookies(c -> c.add("JSESSIONID", jsessionId))
         .retrieve()
         .bodyToFlux(client.asta_lsi2.models.MaitreApprentissage.class)
         .collectList()
@@ -127,7 +106,7 @@ public class ApprentiController {
         .orElse(java.util.Collections.emptyList());
     var majors = webClient.get()
         .uri("/majeurs/all")
-        .cookies(c -> c.add("JSESSIONID", finalJsessionId))
+        .cookies(c -> c.add("JSESSIONID", jsessionId))
         .retrieve()
         .bodyToFlux(client.asta_lsi2.models.Majeur.class)
         .collectList()
@@ -141,20 +120,12 @@ public class ApprentiController {
 
     @PostMapping("/edit/{id}")
     public String updateApprenti(@PathVariable Long id, Apprenti apprentiForm, Authentication authentication, HttpServletRequest request) {
-        String jsessionId = null;
-        if (request.getCookies() != null) {
-            for (Cookie cookie : request.getCookies()) {
-                if ("JSESSIONID".equals(cookie.getName())) {
-                    jsessionId = cookie.getValue();
-                    break;
-                }
-            }
-        }
-        String finalJsessionId = jsessionId;
+        String jsessionId = cookieService.getJSessionId(request);
+
 
     webClient.patch()
         .uri("/apprenti/editApprenti/{id}", id)
-                .cookies(c -> c.add("JSESSIONID", finalJsessionId))
+                .cookies(c -> c.add("JSESSIONID", jsessionId))
                 .bodyValue(apprentiForm)
                 .retrieve()
                 .toBodilessEntity()
@@ -165,20 +136,12 @@ public class ApprentiController {
 
     @GetMapping("/{id}/userinfo-fragment")
     public String getUserInfoFragment(@PathVariable Long id, Model model, Authentication authentication, HttpServletRequest request) {
-        String jsessionId = null;
-        if (request.getCookies() != null) {
-            for (Cookie cookie : request.getCookies()) {
-                if ("JSESSIONID".equals(cookie.getName())) {
-                    jsessionId = cookie.getValue();
-                    break;
-                }
-            }
-        }
+        String jsessionId = cookieService.getJSessionId(request);
 
-        String finalJsessionId = jsessionId;
+
         Apprenti apprenti = webClient.get()
                 .uri("/apprenti/getApprentiById/{id}", id)
-                .cookies(c -> c.add("JSESSIONID", finalJsessionId))
+                .cookies(c -> c.add("JSESSIONID", jsessionId))
                 .retrieve()
                 .bodyToMono(Apprenti.class)
                 .block();

@@ -6,9 +6,12 @@ import client.asta_lsi2.models.Majeur;
 import client.asta_lsi2.models.Programme;
 import client.asta_lsi2.models.Role;
 import client.asta_lsi2.models.TuteurEnseignant;
+import client.asta_lsi2.service.CookiService;
 import client.asta_lsi2.service.MajeurService;
 import client.asta_lsi2.service.AnneeAcademiqueCouranteService;
 import client.asta_lsi2.service.ApprentiService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -34,22 +37,25 @@ public class RegisterController {
     private final MajeurService majeurService;
     private final AnneeAcademiqueCouranteService anneeAcademiqueCouranteService;
     private final ApprentiService apprentiService;
-
-    public RegisterController(WebClient webClient, MajeurService majeurService, AnneeAcademiqueCouranteService anneeAcademiqueCouranteService, ApprentiService apprentiService) {
+    private final CookiService cookiService;
+    public RegisterController(WebClient webClient, MajeurService majeurService, AnneeAcademiqueCouranteService anneeAcademiqueCouranteService, ApprentiService apprentiService,CookiService cookiService) {
         this.webClient = webClient;
         this.majeurService = majeurService;
         this.anneeAcademiqueCouranteService = anneeAcademiqueCouranteService;
         this.apprentiService = apprentiService;
+        this.cookiService = cookiService;
     }
 
     @GetMapping("/apprenti")
-    public String registerApprenti(Model model) {
+    public String registerApprenti(Model model,HttpServletRequest request) {
+        String jsessionId=cookiService.getJSessionId(request);
         model.addAttribute("registerApprentiForm", new Apprenti());
         model.addAttribute("majeurs", majeurService.findAll());
         model.addAttribute("programmes", Programme.values());
         // Charger entreprises et maîtres pour le formulaire
         var entreprises = webClient.get()
                 .uri("/entreprises/all")
+                .cookies(c -> c.add("JSESSIONID", jsessionId))
                 .retrieve()
                 .bodyToFlux(client.asta_lsi2.models.Entreprise.class)
                 .collectList()
@@ -57,6 +63,7 @@ public class RegisterController {
                 .orElse(java.util.Collections.emptyList());
         var maitres = webClient.get()
                 .uri("/maitre/all")
+                .cookies(c -> c.add("JSESSIONID", jsessionId))
                 .retrieve()
                 .bodyToFlux(client.asta_lsi2.models.MaitreApprentissage.class)
                 .collectList()
@@ -68,9 +75,9 @@ public class RegisterController {
     }
 
     @GetMapping("/apprenti/fragment")
-    public String registerApprentiFragment(Model model) {
+    public String registerApprentiFragment(Model model,HttpServletRequest request) {
         // Réutilise la méthode précédente pour remplir le modèle
-        registerApprenti(model);
+        registerApprenti(model,request);
         return "apprenti/register :: registerForm";
     }
 
@@ -171,7 +178,7 @@ public class RegisterController {
     }
 
     @PostMapping("/tuteurEnseignant")
-    public String registerTuteurSubmit(@ModelAttribute TuteurEnseignant tuteurEnseignant) {
+    public String registerTuteurSubmit(@ModelAttribute TuteurEnseignant tuteurEnseignant, HttpServletRequest request) {
         webClient.post()
                 .uri("/register/tuteurEnseignant")
                 .bodyValue(tuteurEnseignant)
@@ -182,7 +189,13 @@ public class RegisterController {
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 tuteurEnseignant.getEmail(),
                 tuteurEnseignant.getPassword(),
-                List.of(new SimpleGrantedAuthority(Role.TUTEUR_ENSEIGNANT.name()))
+                List.of(new SimpleGrantedAuthority(
+                        "ROLE_"+Role.TUTEUR_ENSEIGNANT.name()))
+        );
+        HttpSession session = request.getSession(true);
+        session.setAttribute(
+                "SPRING_SECURITY_CONTEXT",
+                SecurityContextHolder.getContext()
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
