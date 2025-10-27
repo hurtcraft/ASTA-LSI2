@@ -6,8 +6,7 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=asta_bd
-    ports:
-      - "3307:3306"
+
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
