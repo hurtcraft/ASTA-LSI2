@@ -11,10 +11,10 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-uroot", "-proot" ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+      test: ["CMD", "mysqladmin", "ping", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 10s
+      retries: 15
   app:
     build: .
     container_name: asta_app
