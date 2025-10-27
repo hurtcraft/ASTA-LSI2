@@ -5,6 +5,8 @@ import client.asta_lsi2.models.ApprentiArchive;
 import client.asta_lsi2.models.Programme;
 import client.asta_lsi2.repository.ApprentiRepository;
 import client.asta_lsi2.repository.ApprentiArchiveRepository;
+import client.asta_lsi2.repository.EvaluationEcoleRepository;
+import client.asta_lsi2.repository.MissionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,13 +19,19 @@ public class AnneeAcademiqueService {
     private final ApprentiRepository apprentiRepository;
     private final ApprentiArchiveRepository apprentiArchiveRepository;
     private final AnneeAcademiqueCouranteService anneeAcademiqueCouranteService;
+    private final EvaluationEcoleRepository evaluationEcoleRepository;
+    private final MissionRepository missionRepository;
     
     public AnneeAcademiqueService(ApprentiRepository apprentiRepository, 
                                  ApprentiArchiveRepository apprentiArchiveRepository,
-                                 AnneeAcademiqueCouranteService anneeAcademiqueCouranteService) {
+                                 AnneeAcademiqueCouranteService anneeAcademiqueCouranteService,
+                                 EvaluationEcoleRepository evaluationEcoleRepository,
+                                 MissionRepository missionRepository) {
         this.apprentiRepository = apprentiRepository;
         this.apprentiArchiveRepository = apprentiArchiveRepository;
         this.anneeAcademiqueCouranteService = anneeAcademiqueCouranteService;
+        this.evaluationEcoleRepository = evaluationEcoleRepository;
+        this.missionRepository = missionRepository;
     }
     
     /**
@@ -40,8 +48,15 @@ public class AnneeAcademiqueService {
         // 1. Archiver les apprentis de I3
         List<Apprenti> apprentisI3 = apprentiRepository.findByProgramme(Programme.I3);
         for (Apprenti apprenti : apprentisI3) {
+            // Supprimer d'abord les enregistrements liés pour éviter les contraintes de clé étrangère
+            evaluationEcoleRepository.deleteByApprenti(apprenti);
+            missionRepository.deleteAll(missionRepository.findByApprenti(apprenti));
+            
+            // Créer l'archive
             ApprentiArchive archive = new ApprentiArchive(apprenti, ancienneAnnee);
             apprentiArchiveRepository.save(archive);
+            
+            // Supprimer l'apprenti
             apprentiRepository.delete(apprenti);
         }
         

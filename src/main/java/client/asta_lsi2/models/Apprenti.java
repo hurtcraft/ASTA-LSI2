@@ -1,13 +1,8 @@
 package client.asta_lsi2.models;
 
-
-
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.Year;
-import jakarta.persistence.*;
-import lombok.Data;
 import java.time.Year;
 
 @Data
@@ -52,16 +47,13 @@ public class Apprenti {
     @Column(length = 20)
     private String telephone;
 
-    private String password;
-
     public Apprenti(Long apprentiId, String apprentiName, String apprentiPrenom,
-                    String apprentiEmail, String telephone,String password) {
+                    String apprentiEmail, String telephone) {
         this.apprentiId = apprentiId;
         this.apprentiName = apprentiName;
         this.apprentiPrenom = apprentiPrenom;
         this.apprentiEmail = apprentiEmail;
         this.telephone = telephone;
-        this.password = password;
     }
 
     public Apprenti() {

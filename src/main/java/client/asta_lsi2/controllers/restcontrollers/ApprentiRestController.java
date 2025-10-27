@@ -96,10 +96,6 @@ public class ApprentiRestController {
             if (updatedApprenti.getProgramme() != null) {
                 existingApprenti.setProgramme(updatedApprenti.getProgramme());
             }
-            // Mot de passe : si fourni et non vide, le service l'encodera ; si absent, on le garde tel quel
-            if (updatedApprenti.getPassword() != null && !updatedApprenti.getPassword().isBlank()) {
-                existingApprenti.setPassword(updatedApprenti.getPassword());
-            }
 
             apprentiService.save(existingApprenti);
             return ResponseEntity.ok(existingApprenti);

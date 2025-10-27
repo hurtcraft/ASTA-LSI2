@@ -62,8 +62,8 @@
                             <td th:text="${majeur.label}"></td>
                             <td>
                                 <a class="btn btn-sm btn-outline-primary" th:href="@{'/majeurs/' + ${majeur.majeurId} + '/edit'}">Modifier</a>
-                                <a class="btn btn-sm btn-outline-danger" th:href="@{'/majeurs/' + ${majeur.majeurId} + '/delete'}" 
-                                   onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce majeur ?')">Supprimer</a>
+                                <!-- <a class="btn btn-sm btn-outline-danger" th:href="@{'/majeurs/' + ${majeur.majeurId} + '/delete'}" 
+                                   onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce majeur ?')">Supprimer</a> -->
                             </td>
                         </tr>
                         </tbody>

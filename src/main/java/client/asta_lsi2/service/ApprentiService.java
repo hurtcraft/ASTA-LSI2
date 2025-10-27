@@ -2,7 +2,6 @@ package client.asta_lsi2.service;
 
 import client.asta_lsi2.models.Apprenti;
 import client.asta_lsi2.repository.ApprentiRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Year;
@@ -13,12 +12,9 @@ import java.util.Optional;
 public class ApprentiService {
 
 	private final ApprentiRepository apprentiRepository;
-	private final PasswordEncoder passwordEncoder;
 
-
-	public ApprentiService(ApprentiRepository apprentiRepository,PasswordEncoder passwordEncoder) {
+	public ApprentiService(ApprentiRepository apprentiRepository) {
 		this.apprentiRepository = apprentiRepository;
-		this.passwordEncoder = passwordEncoder;
 	}
 
 	public List<Apprenti> listApprentisForYear(Year year) {
@@ -33,11 +29,6 @@ public class ApprentiService {
 		return apprentiRepository.findByApprentiEmail(email);
 	}
 	public void save(Apprenti apprenti) {
-		if (apprenti.getPassword() != null && !apprenti.getPassword().isBlank()) {
-			apprenti.setPassword(passwordEncoder.encode(apprenti.getPassword()));
-		} else {
-			apprenti.setPassword(null);
-		}
 		apprentiRepository.save(apprenti);
 	}
 	public List<Apprenti> findByApprentiName(String apprentiName) {
