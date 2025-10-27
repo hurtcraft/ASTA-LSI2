@@ -27,9 +27,6 @@ public class ApprentiArchive {
     private String telephone;
     
     @Column(nullable = false)
-    private String password;
-    
-    @Column(nullable = false)
     private Year anneeAcademiqueDebut;
     
     @Column(nullable = false)
@@ -59,7 +56,6 @@ public class ApprentiArchive {
         this.apprentiPrenom = apprenti.getApprentiPrenom();
         this.apprentiEmail = apprenti.getApprentiEmail();
         this.telephone = apprenti.getTelephone();
-        this.password = apprenti.getPassword();
         this.anneeAcademiqueDebut = apprenti.getAnneeAcademiqueDebut();
         this.anneeAcademiqueFin = apprenti.getAnneeAcademiqueFin();
         this.programmeFinal = apprenti.getProgramme();

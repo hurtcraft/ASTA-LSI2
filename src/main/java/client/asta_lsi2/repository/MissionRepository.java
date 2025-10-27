@@ -9,4 +9,5 @@ import java.util.List;
 
 public interface MissionRepository extends JpaRepository<Mission, Long> {
     List<Mission> findMissionsByMotCleContainingIgnoreCase(String motCle);
+    List<Mission> findByApprenti(Apprenti apprenti);
 }

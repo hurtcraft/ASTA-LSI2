@@ -104,11 +104,6 @@ public class RegisterController {
             apprenti.setAnneeAcademiqueDebut(anneeDebut);
             apprenti.setAnneeAcademiqueFin(anneeDebut.plusYears(1));
             
-            // Définir un mot de passe par défaut si non fourni
-            if (apprenti.getPassword() == null || apprenti.getPassword().isEmpty()) {
-                apprenti.setPassword("password123"); // Mot de passe par défaut
-            }
-            
             // Convertir les IDs en objets AVANT la sauvegarde
             if (majeurId != null) {
                 Majeur majeur = majeurService.findById(majeurId);

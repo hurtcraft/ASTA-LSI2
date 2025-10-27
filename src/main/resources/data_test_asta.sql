@@ -2,14 +2,6 @@
 -- Full test data for asta_bd (generated, updated)
 SET FOREIGN_KEY_CHECKS=0;
 
--- annee_academique_courante
-INSERT INTO `annee_academique_courante` (`id`, `annee_debut`, `annee_fin`) VALUES
-(1, 2020, 2021),
-(2, 2021, 2022),
-(3, 2022, 2023),
-(4, 2023, 2024),
-(5, 2024, 2025);
-
 -- entreprise
 INSERT INTO `entreprise` (`entreprise_id`, `entreprise_adresse`, `info_acces_locaux`, `raison_sociale`) VALUES
 (1, '10 Rue de la Paix, Paris', 'Accès par interphone', 'Capgemini'),
@@ -59,12 +51,12 @@ INSERT INTO `user_roles` (`user_id`, `roles`) VALUES
 (5, 'ROLE_TUTEUR_ENSEIGNANT');
 
 -- apprenti (5 étudiants EFREI, years 2025-2027 as requested)
-INSERT INTO `apprenti` (`apprenti_id`, `annee_academique_debut`, `annee_academique_fin`, `apprenti_email`, `apprenti_name`, `apprenti_prenom`, `password`, `programme`, `telephone`, `entreprise_id`, `ma_id`, `majeur_id`) VALUES
-(1, 2025, 2026, 'luc.aslan@efrei.fr', 'Aslan', 'Luc', NULL, 'I2', '0611122233', 1, 1, 3),
-(2, 2025, 2027, 'sophie.martin@efrei.fr', 'Martin', 'Sophie', NULL, 'I1', '0612233445', 2, 2, 1),
-(3, 2026, 2027, 'amine.ben@efrei.fr', 'Ben', 'Amine', NULL, 'I3', '0613344556', 3, 3, 2),
-(4, 2025, 2027, 'claire.dufour@efrei.fr', 'Dufour', 'Claire', NULL, 'I2', '0614455667', 4, 4, 4),
-(5, 2026, 2027, 'thomas.leclerc@efrei.fr', 'Leclerc', 'Thomas', NULL, 'I1', '0615566778', 5, 5, 5);
+INSERT INTO `apprenti` (`apprenti_id`, `annee_academique_debut`, `annee_academique_fin`, `apprenti_email`, `apprenti_name`, `apprenti_prenom`, `programme`, `telephone`, `entreprise_id`, `ma_id`, `majeur_id`) VALUES
+(1, 2025, 2026, 'luc.aslan@efrei.fr', 'Aslan', 'Luc', 'I2', '0611122233', 1, 1, 3),
+(2, 2025, 2027, 'sophie.martin@efrei.fr', 'Martin', 'Sophie', 'I1', '0612233445', 2, 2, 1),
+(3, 2026, 2027, 'amine.ben@efrei.fr', 'Ben', 'Amine', 'I3', '0613344556', 3, 3, 2),
+(4, 2025, 2027, 'claire.dufour@efrei.fr', 'Dufour', 'Claire', 'I2', '0614455667', 4, 4, 4),
+(5, 2026, 2027, 'thomas.leclerc@efrei.fr', 'Leclerc', 'Thomas', 'I1', '0615566778', 5, 5, 5);
 
 -- rendu
 INSERT INTO `rendu` (`rendu_id`, `commentaire`, `note_rendu`, `theme`, `type_rendu`) VALUES
@@ -105,13 +97,5 @@ INSERT INTO `visite` (`visite_id`, `commentaires`, `format`, `visite_date`) VALU
 (3, 'Visite client', 1, '2024-05-20 11:00:00'),
 (4, 'Audit sécurité', 2, '2024-09-12 10:00:00'),
 (5, 'Jury de projet', 1, '2025-06-10 09:30:00');
-
--- apprenti_archive
-INSERT INTO `apprenti_archive` (`archive_id`, `annee_academique_debut`, `annee_academique_fin`, `annee_archivage`, `apprenti_email`, `apprenti_name`, `apprenti_prenom`, `password`, `programme_final`, `telephone`, `entreprise_id`, `majeur_id`) VALUES
-(1, 2020, 2021, 2025, 'arch.luc.aslan@efrei.fr', 'Aslan', 'Luc', '', 'I2', '0611122233', 1, 3),
-(2, 2020, 2021, 2025, 'arch.sophie.martin@efrei.fr', 'Martin', 'Sophie', '', 'I1', '0612233445', 2, 1),
-(3, 2021, 2022, 2025, 'arch.amine.ben@efrei.fr', 'Ben', 'Amine', '', 'I3', '0613344556', 3, 2),
-(4, 2021, 2022, 2025, 'arch.claire.dufour@efrei.fr', 'Dufour', 'Claire', '', 'I2', '0614455667', 4, 4),
-(5, 2022, 2023, 2025, 'arch.thomas.leclerc@efrei.fr', 'Leclerc', 'Thomas', '', 'I1', '0615566778', 5, 5);
 
 SET FOREIGN_KEY_CHECKS=1;

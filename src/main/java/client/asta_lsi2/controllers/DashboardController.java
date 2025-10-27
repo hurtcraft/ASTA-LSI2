@@ -75,9 +75,7 @@ public class DashboardController {
         sample.setApprentiPrenom("PrenomSample");
         sample.setApprentiEmail("sample" + System.currentTimeMillis() + "@example.com");
         sample.setTelephone("0000000000");
-        sample
-                .setAnneeAcademiqueCourante();
-        sample.setPassword("password");
+        sample.setAnneeAcademiqueCourante();
         apprentiService.save(sample);
         return "redirect:/dashboard";
     }
