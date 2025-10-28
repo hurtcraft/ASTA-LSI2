@@ -19,7 +19,7 @@
 
 ### 2.2. SGBD
 - **MySQL 8.0**
-- Base de données : `asta_lsi2`
+- Base de données : `asta_bd`
 
 ---
 
@@ -33,10 +33,17 @@
 
 ### 3.2. Configuration de la base de données
 
-La base de donnée se configure automatiquement après avoir entré la commande : docker compose up --build
-### 3.3. Lancement de l'application
-- Exécuter la classe `AstaLsi2Application.java` (Si non usage de docker)
+La base de donnée se configure automatiquement via hibernate après avoir entré la commande : docker compose up --build
+### 3.3. Lancement de l'application 
+#### 3.3.1 Lancement via docker
 - Exécuter la commande "docker compose up --build" et laissez l'application se lancer.
+#### 3.3.2 Lancement via maven
+
+- Exécuter la commande maven clean package
+- Exécuter la commande java -jar target/ASTA_LSI2-0.0.1-SNAPSHOT.jar
+- Un jeu de test est disponible dans ressources/data.sql
+
+
 
 ### 3.4. Accès à l'application
 
@@ -71,13 +78,16 @@ Si vous utilisez docker, celui-ci importera automatiquement des données de test
 
 **3. Création rapide d'entités liées**
 - **Ce que nous avons fait :** Possibilité de créer une entreprise ou un maître d'apprentissage directement depuis le formulaire d'apprenti.
-- **Comment :** Modals Bootstrap + appels REST + mise à jour automatique des listes déroulantes.
+- **Comment :** pop ups Bootstrap + appels REST + mise à jour automatique des listes déroulantes.
 - **Pourquoi :** Évite de quitter le formulaire et de perdre sa saisie, workflow plus productif.
 
-**4. Affichage des détails en modal**
+**4. Affichage des détails en pop up**
 - **Ce que nous avons fait :** Consultation rapide des détails d'un apprenti sans quitter le dashboard.
-- **Comment :** Fragments Thymeleaf chargés via AJAX dans une modal Bootstrap.
+- **Comment :** Fragments Thymeleaf chargés via AJAX dans une pop up Bootstrap.
 - **Pourquoi :** Navigation fluide, contexte préservé, pas de rechargement complet.
+
+**5. Séparation des environnements**
+- **Séparation de l'envrionnement de dev et de prod via application-dev.properties application-prod.properties et application-secret.properties
 
 ---
 
@@ -134,6 +144,9 @@ Si vous utilisez docker, celui-ci importera automatiquement des données de test
 ---
 
 ### d) Trois points à retenir du cours et du projet
+- Thymeleaf natif c'est moche
+- Le cours est excellent : il explore tous les détails, jusqu’au fonctionnement interne de la JVM et de Spring.
+- La puissance de Spring réside dans sa simplicité d’implémentation et le grand nombre de modules déjà disponibles.
 
 
 
@@ -153,6 +166,11 @@ Si vous utilisez docker, celui-ci importera automatiquement des données de test
 
 **5. Export / Import de données (Excel, PDF)**
 - **Raison :** Fonctionnalité bonus, pas prioritaire
+**6. Inscription/connexion apprenti et maitre d'apprentissage**
+- **État actuel :** Le code est assez modulable pour implémenter ces fonctionnalitées facilement, certaines routes sont deja prête 
+- **Raison :** Fonctionnalité bonus, pas prioritaire
+
+
 
 ---
 
