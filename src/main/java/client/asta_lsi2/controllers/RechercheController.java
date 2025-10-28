@@ -114,6 +114,7 @@ public class RechercheController {
         }
 
         model.addAttribute("apprentis", suggestions);
+
         return "fragments/search-suggestions :: list";
     }
 

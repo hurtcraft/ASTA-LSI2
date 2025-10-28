@@ -150,7 +150,7 @@ Si vous utilisez docker, celui-ci importera automatiquement des données de test
 
 
 
-### e) Fonctionnalités non implémentées
+### e) Fonctionnalités Bonus non implémentées
 
 **1. Messages de confirmation/erreur après modification**
 - **Raison :** Contrainte de temps, priorité donnée aux fonctionnalités CRUD de base
@@ -166,8 +166,13 @@ Si vous utilisez docker, celui-ci importera automatiquement des données de test
 
 **5. Export / Import de données (Excel, PDF)**
 - **Raison :** Fonctionnalité bonus, pas prioritaire
+
 **6. Inscription/connexion apprenti et maitre d'apprentissage**
 - **État actuel :** Le code est assez modulable pour implémenter ces fonctionnalitées facilement, certaines routes sont deja prête 
+- **Raison :** Fonctionnalité bonus, pas prioritaire
+
+**7. Liste déroulante dynamique**
+- **État actuel :** L'affichage se fait bien, toutefois la logique métier reste à implémenter
 - **Raison :** Fonctionnalité bonus, pas prioritaire
 
 
