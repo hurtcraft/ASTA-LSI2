@@ -30,7 +30,7 @@ public class DashboardController {
 
     @GetMapping({"/dashboard"})
     public String dashboard(@RequestParam(required = false) String tri,
-                            @RequestParam(required = false) String inverse, @RequestParam(value = "email", required = false) String emailParam,
+                            @RequestParam(required = false) String inverse,
                             Model model) {
         Year currentYear = anneeAcademiqueCouranteService.getAnneeDebut();
         model.addAttribute("currentYear", currentYear);
@@ -59,7 +59,10 @@ public class DashboardController {
                 tousApprentis.sort((a1, a2) -> a1.getApprentiName().compareTo(a2.getApprentiName()));
             }
         }
-        TuteurEnseignant tuteurEnseignant = getTuteurEnseignant(emailParam);
+        String tuteurEmail=SecurityContextHolder.getContext().getAuthentication().getName();
+
+        TuteurEnseignant tuteurEnseignant = getTuteurEnseignant(tuteurEmail);
+
         model.addAttribute("apprentis", tousApprentis);
         model.addAttribute("triActuel", tri != null ? tri : "aucun");
         model.addAttribute("triInverse", triInverse);

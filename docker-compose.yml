@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  mysql:
+  mysqldb:
     image: mysql:8.0
     container_name: asta_mysql
     environment:
@@ -14,21 +14,21 @@ services:
       interval: 10s
       timeout: 10s
       retries: 15
-
-
   app:
     build: .
     container_name: asta_app
     ports:
       - "8080:8080"
+
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/asta_bd?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/asta_bd?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
     depends_on:
-      mysql:
+      mysqldb:
         condition: service_healthy
+
 
 volumes:
   mysql_data:

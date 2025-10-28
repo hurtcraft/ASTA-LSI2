@@ -173,7 +173,7 @@ public class RegisterController {
     }
 
     @PostMapping("/tuteurEnseignant")
-    public String registerTuteurSubmit(@ModelAttribute TuteurEnseignant tuteurEnseignant, HttpServletRequest request) {
+    public String registerTuteurSubmit(@ModelAttribute TuteurEnseignant tuteurEnseignant, HttpServletRequest request ) {
         webClient.post()
                 .uri("/register/tuteurEnseignant")
                 .bodyValue(tuteurEnseignant)
@@ -194,6 +194,6 @@ public class RegisterController {
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return "redirect:/dashboard?email=" + tuteurEnseignant.getEmail();
+        return "redirect:/dashboard";
     }
 }

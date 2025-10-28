@@ -34,7 +34,6 @@
 ### 3.2. Configuration de la base de données
 
 La base de donnée se configure automatiquement après avoir entré la commande : docker compose up --build
-
 ### 3.3. Lancement de l'application
 - Exécuter la classe `AstaLsi2Application.java` (Si non usage de docker)
 - Exécuter la commande "docker compose up --build" et laissez l'application se lancer.

@@ -54,7 +54,6 @@ public class LoginController {
     public String loginSubmit(@ModelAttribute LoginRequest loginRequest, HttpServletRequest request,
                               RedirectAttributes redirectAttributes) {
         try {
-            System.out.println(loginRequest);
             UsernamePasswordAuthenticationToken authToken =
                     new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword());
 
@@ -78,7 +77,7 @@ public class LoginController {
                     .findFirst();
 
             userDetails.getAuthorities().forEach(a -> System.out.println(a.getAuthority()));
-
+            System.out.println("USER " + userDetails);
             return "redirect:"+ redirectUrl.orElse("/login");
         } catch (AuthenticationException ex) {
             System.out.println("Échec de connexion pour : " + loginRequest.getEmail());
