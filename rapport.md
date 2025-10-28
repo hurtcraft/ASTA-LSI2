@@ -18,7 +18,7 @@
 - **Visual Studio Code** avec extensions Java
 
 ### 2.2. SGBD
-- **MySQL 8.0** (ou **MariaDB 10.4+** compatible)
+- **MySQL 8.0**
 - Base de données : `asta_lsi2`
 
 ---
@@ -29,23 +29,15 @@
 - Java 17 ou supérieur
 - Maven 3.6+
 - MySQL
+- Docker
 
 ### 3.2. Configuration de la base de données
 
-1. Créer la base de données :
-```sql
-CREATE DATABASE asta_lsi2;
-```
-
-2. Configurer les accès dans `src/main/resources/application-secret.properties` :
-```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/asta_lsi2
-spring.datasource.username=votre_utilisateur
-spring.datasource.password=votre_mot_de_passe
-```
+La base de donnée se configure automatiquement après avoir entré la commande : docker compose up --build
 
 ### 3.3. Lancement de l'application
-- Exécuter la classe `AstaLsi2Application.java`
+- Exécuter la classe `AstaLsi2Application.java` (Si non usage de docker)
+- Exécuter la commande "docker compose up --build" et laissez l'application se lancer.
 
 ### 3.4. Accès à l'application
 
@@ -59,6 +51,8 @@ Au premier lancement, Spring Data JPA crée automatiquement les tables. Vous pou
 - Créer des apprentis via l'interface web
 - Importer des données via la fonctionnalité d'import (si disponible)
 - Utiliser les endpoints REST documentés sur Swagger
+
+Si vous utilisez docker, celui-ci importera automatiquement des données de test (data.sql)
 
 ---
 
@@ -221,14 +215,7 @@ Le projet respecte bien les principes fondamentaux (S, L, D). Les améliorations
 - Lombok (réduction boilerplate)
 - Spring Boot DevTools (hot reload)
 - Maven (gestion de dépendances)
+- Docker (Image)
 
----
-
-## 6. Remarques complémentaires
-
-- L'application utilise JWT pour l'authentification mais conserve également les sessions (compatibilité vues Thymeleaf)
-- Le schéma de base de données est généré automatiquement par JPA (DDL auto)
-- Les relations entre entités sont gérées via annotations JPA (@OneToMany, @ManyToOne, etc.)
-- Le projet suit la structure Maven standard (src/main/java, src/main/resources, src/test)
 
 ---
