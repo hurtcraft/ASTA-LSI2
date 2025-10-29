@@ -7,4 +7,5 @@ import java.util.Optional;
 
 @Repository
 public interface MajeurRepository extends JpaRepository<Majeur, Long> {
+	java.util.Optional<Majeur> findByLabel(String label);
 }

@@ -29,8 +29,34 @@ public class MajeurController {
     }
     
     @PostMapping("/add")
-    public String addMajeur(@ModelAttribute Majeur majeur) {
-        majeurService.save(majeur);
+    public String addMajeur(@ModelAttribute Majeur majeur, Model model) {
+        // Trim label and basic validation
+        if (majeur.getLabel() != null) {
+            majeur.setLabel(majeur.getLabel().trim());
+        }
+
+        if (majeur.getLabel() == null || majeur.getLabel().isEmpty()) {
+            model.addAttribute("errorMessage", "Le libellé du majeur est requis.");
+            model.addAttribute("majeur", majeur);
+            return "majeurs/add";
+        }
+
+        // Check duplicate by label and show friendly error instead of throwing 500
+        if (majeurService.existsByLabel(majeur.getLabel())) {
+            model.addAttribute("errorMessage", "Cette majeure existe déjà.");
+            model.addAttribute("majeur", majeur);
+            return "majeurs/add";
+        }
+
+        try {
+            majeurService.save(majeur);
+        } catch (org.springframework.dao.DataIntegrityViolationException ex) {
+            // Fallback: unique constraint violation
+            model.addAttribute("errorMessage", "Cette majeure existe déjà.");
+            model.addAttribute("majeur", majeur);
+            return "majeurs/add";
+        }
+
         return "redirect:/majeurs";
     }
     

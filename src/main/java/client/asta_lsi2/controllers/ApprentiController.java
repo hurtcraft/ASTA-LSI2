@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.bind.annotation.PostMapping;
 
 
@@ -119,19 +120,56 @@ public class ApprentiController {
     }
 
     @PostMapping("/edit/{id}")
-    public String updateApprenti(@PathVariable Long id, Apprenti apprentiForm, Authentication authentication, HttpServletRequest request) {
+    public String updateApprenti(@PathVariable Long id, Apprenti apprentiForm, Authentication authentication, HttpServletRequest request, org.springframework.ui.Model model) {
         String jsessionId = cookieService.getJSessionId(request);
+        try {
+            webClient.patch()
+                    .uri("/apprenti/editApprenti/{id}", id)
+                    .cookies(c -> c.add("JSESSIONID", jsessionId))
+                    .bodyValue(apprentiForm)
+                    .retrieve()
+                    .toBodilessEntity()
+                    .block();
 
-
-    webClient.patch()
-        .uri("/apprenti/editApprenti/{id}", id)
-                .cookies(c -> c.add("JSESSIONID", jsessionId))
-                .bodyValue(apprentiForm)
-                .retrieve()
-                .toBodilessEntity()
-                .block();
-
-        return "redirect:/dashboard";
+            return "redirect:/dashboard";
+        } catch (WebClientResponseException e) {
+            if (e.getStatusCode() == HttpStatus.CONFLICT) {
+                // Duplicate email: re-render the edit form with the submitted data and an error message
+                model.addAttribute("apprenti", apprentiForm);
+                model.addAttribute("programmes", Programme.values());
+                // Fetch entreprises, maitres, and majors to populate selects (best-effort)
+                var entreprises = webClient.get()
+                        .uri("/entreprises/all")
+                        .cookies(c -> c.add("JSESSIONID", jsessionId))
+                        .retrieve()
+                        .bodyToFlux(client.asta_lsi2.models.Entreprise.class)
+                        .collectList()
+                        .blockOptional()
+                        .orElse(java.util.Collections.emptyList());
+                var maitres = webClient.get()
+                        .uri("/maitre/all")
+                        .cookies(c -> c.add("JSESSIONID", jsessionId))
+                        .retrieve()
+                        .bodyToFlux(client.asta_lsi2.models.MaitreApprentissage.class)
+                        .collectList()
+                        .blockOptional()
+                        .orElse(java.util.Collections.emptyList());
+                var majors = webClient.get()
+                        .uri("/majeurs/all")
+                        .cookies(c -> c.add("JSESSIONID", jsessionId))
+                        .retrieve()
+                        .bodyToFlux(client.asta_lsi2.models.Majeur.class)
+                        .collectList()
+                        .blockOptional()
+                        .orElse(java.util.Collections.emptyList());
+                model.addAttribute("entreprises", entreprises);
+                model.addAttribute("maitres", maitres);
+                model.addAttribute("majors", majors);
+                model.addAttribute("errorMessage", "Un apprenti a déjà ce mail");
+                return "apprenti/useredit";
+            }
+            throw e;
+        }
     }
 
     @GetMapping("/{id}/userinfo-fragment")

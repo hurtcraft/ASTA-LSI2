@@ -22,6 +22,10 @@ public class MajeurService {
     public Majeur save(Majeur majeur) {
         return majeurRepository.save(majeur);
     }
+
+    public boolean existsByLabel(String label) {
+        return majeurRepository.findByLabel(label).isPresent();
+    }
     
     public Majeur findById(Long id) {
         return majeurRepository.findById(id).orElse(null);

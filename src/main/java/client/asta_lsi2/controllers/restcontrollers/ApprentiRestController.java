@@ -8,7 +8,9 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -65,6 +67,15 @@ public class ApprentiRestController {
         Optional<Apprenti> existingApprentiOpt = apprentiService.findById(id);
         if (existingApprentiOpt.isPresent()) {
             Apprenti existingApprenti = existingApprentiOpt.get();
+            // If an email is provided, ensure it's not already used by another apprenti
+            if (updatedApprenti.getApprentiEmail() != null) {
+                String newEmail = updatedApprenti.getApprentiEmail();
+                Optional<Apprenti> byEmail = apprentiService.findApprentiByEmail(newEmail);
+                if (byEmail.isPresent() && !byEmail.get().getApprentiId().equals(id)) {
+                    // Email belongs to a different apprenti -> conflict
+                    throw new ResponseStatusException(HttpStatus.CONFLICT, "Un apprenti a déjà ce mail");
+                }
+            }
             // Mise à jour partielle : ne modifier que les champs non-null fournis dans le payload
             if (updatedApprenti.getApprentiName() != null) {
                 existingApprenti.setApprentiName(updatedApprenti.getApprentiName());
