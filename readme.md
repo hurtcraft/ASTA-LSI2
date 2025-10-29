@@ -3,13 +3,9 @@
 - Patrick Wu
 - Julien Weng
 
-## Rappel du besoin
-- titi tata
-
-
 ## Dashboard 
 
-Une page unique pour gérer les apprentis (liste, recherche, détails en modal, CRUD) sans rechargement complet.
+Une page unique pour gérer les apprentis (liste, recherche, détails en popup, CRUD) sans rechargement complet.
 
 1) Architecture MVC → REST
 - Séparation des contrôleurs de pages (MVC) et d'API (REST) ; le MVC appelent les API Rest.
@@ -21,14 +17,14 @@ Une page unique pour gérer les apprentis (liste, recherche, détails en modal, 
 - Comment : JavaScript + appels REST.
 - Pourquoi : expérience fluide sans rechargement.
 
-3) Affichage des détails en modal
+3) Affichage des détails en popup
 - Visualition des détails d’un apprenti sans quitter le dashboard.
-- Comment : chargement d’un fragment Thymeleaf via AJAX dans une modal Bootstrap.
+- Comment : chargement d’un fragment Thymeleaf via AJAX dans une popup Bootstrap.
 - Pourquoi : garder le contexte, navigation rapide.
 
 4) Création rapide d’entités liées
 - Création d'entreprise/maître directement depuis le formulaire d’apprenti.
-- Comment : modals “Ajouter” + POST REST + mise à jour de la liste déroulante.
+- Comment : popups “Ajouter” + POST REST + mise à jour de la liste déroulante.
 - Pourquoi : éviter de quitter le formulaire et de perdre la saisie.
 
 5) Message “Liste vide”
@@ -43,8 +39,6 @@ Une page unique pour gérer les apprentis (liste, recherche, détails en modal, 
 
 7) Difficultés et solutions
 - Iframe bloquée : autorisation same-origin dans la configuration de sécurité.
-
-
 
 ## Documentation swagger
 - http://localhost:8080/swagger-ui/index.html#/
