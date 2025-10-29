@@ -21,26 +21,9 @@ public class SecurityConfig {
         this.userDetailsService = userDetailsService;
     }
 
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        return http.csrf(csrf -> csrf.disable())// à activer en prod
-//                .authorizeHttpRequests(
-//                        authorizeRequests -> authorizeRequests
-//                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-//                                .requestMatchers("/","/login", "/register/**")
-//                                .permitAll()
-//                                .requestMatchers("/apprenti/**").hasRole(Role.APPRENTI.name())
-//                                .requestMatchers("/maitre/**").hasRole(Role.MAITRE_APPRENTISSAGE.name())
-//                                .requestMatchers("/api/**").hasAnyRole(Role.APPRENTI.name(), Role.MAITRE_APPRENTISSAGE.name())
-//                                .anyRequest()
-//                                .authenticated()
-//                )
-//                .build();
-//    }
 @Bean
 public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     return http
-        // CSRF désactivé pour simplifier les formulaires/JS (à réactiver et configurer en prod)
         .csrf(csrf -> csrf.disable())
         // Autorisations (ici tout est accessible; affiner selon les rôles si besoin)
         .authorizeHttpRequests(authorize -> authorize

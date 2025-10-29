@@ -17,11 +17,9 @@
 
             <ul class="navbar-nav ms-auto">
 
-<!--                <li class="nav-item">-->
-<!--                    <a class="btn btn-primary" th:href="@{/dashboard}">Dashboard</a>-->
-<!--                </li>-->
+
                 <li class="nav-item">
-                    <span class="nav-link" th:text="${tuteur != null ? tuteur.nom + ' ' + tuteur.prenom : 'Utilisateur'}">Nom Prénom</span>
+                    <span class="nav-link" th:text="'Bonjour ' + (${tuteur != null ? tuteur.nom + ' ' + tuteur.prenom : 'Utilisateur'})"></span>
                 </li>
                 <li class="nav-item">
                     <a class="btn btn-danger text-white px-3" th:href="@{/logout}">Se déconnecter</a>

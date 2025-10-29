@@ -15,10 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Map;
@@ -44,8 +41,12 @@ public class LoginController {
     }
 
     @GetMapping("/login")
-    public String loginForm(Model model) {
+    public String loginForm(Model model,@RequestParam(value = "logout", required = false) String logout) {
         model.addAttribute("loginForm", new LoginRequest());
+
+        if (logout != null) {
+            model.addAttribute("logoutMessage", "Vous avez été déconnecté avec succès.");
+        }
         return "login";
     }
 
@@ -69,18 +70,14 @@ public class LoginController {
 
             UserDetails userDetails = (UserDetails) auth.getPrincipal();
 
-            System.out.println(loginRequest);
             Optional<String> redirectUrl = userDetails.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
                     .map(ROLE_HOME_MAP::get)
                     .filter(Objects::nonNull)
                     .findFirst();
 
-            userDetails.getAuthorities().forEach(a -> System.out.println(a.getAuthority()));
-            System.out.println("USER " + userDetails);
             return "redirect:"+ redirectUrl.orElse("/login");
         } catch (AuthenticationException ex) {
-            System.out.println("Échec de connexion pour : " + loginRequest.getEmail());
             redirectAttributes.addFlashAttribute("errorMessage", "Email ou mot de passe incorrect.");
 
             return "redirect:/login?error";

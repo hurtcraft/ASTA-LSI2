@@ -5,8 +5,10 @@
 ---
 
 ## 1. Identifiants de test
+### 1.1 Via le site
+https://content-commitment-production-a926.up.railway.app/login
 
-**Login :** A mettre 
+**Login :** toto@gmail.com
 **Mot de passe :** A mettre
 
 ---

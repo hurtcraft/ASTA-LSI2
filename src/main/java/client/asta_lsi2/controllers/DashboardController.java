@@ -67,7 +67,6 @@ public class DashboardController {
         model.addAttribute("triActuel", tri != null ? tri : "aucun");
         model.addAttribute("triInverse", triInverse);
         model.addAttribute("tuteur",tuteurEnseignant);
-        System.out.println("Total apprentis affichés: " + tousApprentis.size());
         return "dashboard";
     }
 

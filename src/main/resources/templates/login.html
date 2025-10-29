@@ -20,6 +20,10 @@
             <div th:if="${errorMessage}" class="alert alert-danger text-center" role="alert">
                 <span th:text="${errorMessage}"></span>
             </div>
+
+            <div th:if="${logoutMessage}" class="alert alert-success text-center" role="alert">
+                <span th:text="${logoutMessage}"></span>
+            </div>
             <h1 class="text-center mb-4">Connexion</h1>
             <form th:action="@{/login}" th:object="${loginForm}" method="post" class="d-flex flex-column gap-3">
                 <input type="text" th:field="*{email}" class="form-control" placeholder="Email" required>
