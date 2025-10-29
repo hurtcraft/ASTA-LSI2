@@ -122,11 +122,9 @@ Si vous utilisez docker, celui-ci importera automatiquement des données de test
 
 ### c) Contribution de chaque membre de l'équipe
 
-**À compléter selon votre répartition réelle :**
-
 - **Lucas Vong :** 
 
-- Dashboard (année en cours, tuteur)
+- Dashboard (année en cours, tuteur) / Détail technique disponible dans readme.md
 - Message “La liste est vide. Ajoutez au moins un apprenti”
 - Détails apprenti
 - Édition des champs (page dédiée)
