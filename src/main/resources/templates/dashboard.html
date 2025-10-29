@@ -109,12 +109,15 @@
                             <th>Email</th>
                             <th>Téléphone</th>
                             <th>Programme</th>
+                            <th>Majeur</th>
+                            <th>Entreprise</th>
+                            <th>Maître</th>
                             <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="apprenti : ${apprentis}" class="clickable-row"
-                            th:attr="data-id=${apprenti.apprentiId},data-name=${apprenti.apprentiName},data-prenom=${apprenti.apprentiPrenom},data-email=${apprenti.apprentiEmail},data-telephone=${apprenti.telephone},data-year=${apprenti.anneeAcademiqueString}">
+                            th:attr="data-id=${apprenti.apprentiId},data-name=${apprenti.apprentiName},data-prenom=${apprenti.apprentiPrenom},data-email=${apprenti.apprentiEmail},data-telephone=${apprenti.telephone},data-year=${apprenti.anneeAcademiqueString},data-entreprise=${apprenti.entreprise != null ? apprenti.entreprise.raisonSociale : ''},data-maitre=${apprenti.maitreApprentissage != null ? apprenti.maitreApprentissage.maNom + ' ' + apprenti.maitreApprentissage.maPrenom : ''},data-majeur=${apprenti.majeur != null ? apprenti.majeur.label : ''}">
                             <td th:text="${apprenti.apprentiId}"></td>
                             <td th:text="${apprenti.apprentiName}"></td>
                             <td th:text="${apprenti.apprentiPrenom}"></td>
@@ -123,6 +126,9 @@
                             <td>
                                 <span class="badge bg-primary" th:text="${apprenti.programme != null ? apprenti.programme.label : 'N/A'}"></span>
                             </td>
+                            <td th:text="${apprenti.majeur != null ? apprenti.majeur.label : 'N/A'}"></td>
+                            <td th:text="${apprenti.entreprise != null ? apprenti.entreprise.raisonSociale : 'N/A'}"></td>
+                            <td th:text="${apprenti.maitreApprentissage != null ? apprenti.maitreApprentissage.maNom + ' ' + apprenti.maitreApprentissage.maPrenom : 'N/A'}"></td>
                             <td>
                                 <a class="btn btn-sm btn-outline-primary" th:href="@{'/apprenti/edit/' + ${apprenti.apprentiId}}">Modifier</a>
                                 <a class="btn btn-sm btn-outline-danger delete-apprenti" th:href="@{'/apprenti/deleteapprenti/' + ${apprenti.apprentiId}}">Supprimer</a>

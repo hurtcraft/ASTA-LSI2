@@ -39,6 +39,33 @@
         </div>
 
         <div class="info-section">
+            <h2>Entreprise & Maître d'apprentissage</h2>
+            <div th:if="${apprenti.entreprise != null}">
+                <div class="info-row">
+                    <span class="info-label">Entreprise :</span>
+                    <span class="info-value" th:text="${apprenti.entreprise.raisonSociale}"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Adresse :</span>
+                    <span class="info-value" th:text="${apprenti.entreprise.entrepriseAdresse}"></span>
+                </div>
+            </div>
+            <p th:if="${apprenti.entreprise == null}" style="color: #999; font-style: italic;">Aucune entreprise renseignée</p>
+
+            <div th:if="${apprenti.maitreApprentissage != null}">
+                <div class="info-row">
+                    <span class="info-label">Maître d'apprentissage :</span>
+                    <span class="info-value" th:text="${apprenti.maitreApprentissage.maNom + ' ' + apprenti.maitreApprentissage.maPrenom}"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Email maître :</span>
+                    <span class="info-value" th:text="${apprenti.maitreApprentissage.maEmail}"></span>
+                </div>
+            </div>
+            <p th:if="${apprenti.maitreApprentissage == null}" style="color: #999; font-style: italic;">Aucun maître d'apprentissage renseigné</p>
+        </div>
+
+        <div class="info-section">
             <h2>Formation</h2>
             <div th:if="${apprenti.majeur != null || apprenti.programme != null}">
                 <div class="info-row" th:if="${apprenti.majeur != null}">
