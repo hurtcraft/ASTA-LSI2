@@ -79,8 +79,6 @@
                     <div class="col-md-6 position-relative">
                         <input type="text" id="searchInput" class="form-control"
                                placeholder="Rechercher (nom, entreprise, mission, année)" autocomplete="off">
-                        <div id="suggestBox" class="position-absolute bg-white border rounded shadow-sm w-100"
-                             style="display:none; top:100%; z-index:1050; max-height:260px; overflow-y:auto;"></div>
                     </div>
                     <div class="col-md-6 text-md-end">
                         <button id="sortAZ" class="btn btn-sm btn-outline-secondary">Trier A-Z</button>
@@ -329,8 +327,7 @@
         const sortAZ = document.getElementById('sortAZ');
         const sortZA = document.getElementById('sortZA');
         const tbody = document.querySelector('table tbody');
-        const searchInput = document.getElementById('searchInput');
-        const suggestBox = document.getElementById('suggestBox');
+    const searchInput = document.getElementById('searchInput');
         const clearBtn = document.getElementById('clearSearch');
         const dashboardCard = document.getElementById('dashboardCard');
         const currentYear = (dashboardCard && dashboardCard.getAttribute('data-current-year')) || new Date().getFullYear().toString();
@@ -392,27 +389,7 @@
             }));
         }
 
-        async function fetchSuggest(query) {
-            if (!query || query.trim().length < 2) {
-                suggestBox.style.display = 'none';
-                return;
-            }
-            const res = await fetch(`/dashboard/suggest?q=${encodeURIComponent(query)}`, {headers: {'X-Requested-With': 'XMLHttpRequest'}});
-            if (!res.ok) {
-                suggestBox.style.display = 'none';
-                return;
-            }
-            const html = await res.text();
-            suggestBox.innerHTML = html;
-            suggestBox.style.display = 'block';
-            suggestBox.querySelectorAll('.suggest-item').forEach(item => item.addEventListener('click', function () {
-                const label = this.getAttribute('data-label') || '';
-                searchInput.value = label;
-                suggestBox.style.display = 'none';
-                fetchRows(label);
-                clearBtn.style.display = 'inline-block';
-            }));
-        }
+        // suggestions removed: fetchSuggest not used
 
         if (searchInput) {
             searchInput.addEventListener('input', function () {
@@ -421,14 +398,12 @@
                 debounceId = setTimeout(() => {
                     const trimmed = (q || '').trim();
                     if (!trimmed) {
-                        suggestBox.style.display = 'none';
                         clearBtn.style.display = 'none';
                         fetchRows('').catch(() => {
                         });
                         return;
                     }
-                    fetchSuggest(trimmed).catch(() => {
-                    });
+                    // perform the search (no suggestions)
                     fetchRows(trimmed).then(() => {
                         clearBtn.style.display = 'inline-block';
                     }).catch(() => {
@@ -437,16 +412,13 @@
             });
 
             document.addEventListener('click', function (e) {
-                if (!suggestBox.contains(e.target) && e.target !== searchInput) {
-                    suggestBox.style.display = 'none';
-                }
+                // suggestion box removed
             });
         }
 
         if (clearBtn) {
             clearBtn.addEventListener('click', () => {
                 searchInput.value = '';
-                suggestBox.style.display = 'none';
                 clearBtn.style.display = 'none';
                 // Recharger sans query (le serveur utilisera l'année courante)
                 fetchRows('').catch(() => {
