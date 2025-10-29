@@ -34,12 +34,19 @@ public class ApprentiService {
 	public List<Apprenti> findByApprentiName(String apprentiName) {
 		return apprentiRepository.findApprentisByApprentiName(apprentiName);
 	}
+	public List<Apprenti> findByApprentiNameStartingWithIgnoreCase(String prefix) {
+		return apprentiRepository.findByApprentiNameStartingWithIgnoreCase(prefix == null ? "" : prefix);
+	}
 
 	public Optional<Apprenti> findById(Long id) {
 		return apprentiRepository.findById(id);
 	}
 	public List<Apprenti> findByApprentiEntrepriseRaisonSociale(String raisonSociale) {
 		return apprentiRepository.findApprentisByEntrepriseRaisonSociale(raisonSociale);
+	}
+
+	public List<Apprenti> findByEntrepriseRaisonSocialeStartingWithIgnoreCase(String prefix) {
+		return apprentiRepository.findByEntrepriseRaisonSocialeStartingWithIgnoreCase(prefix == null ? "" : prefix);
 	}
 	public List<Apprenti> findByAnne(int anne){
 		return apprentiRepository.findByAnneeAcademiqueDebut(Year.of(anne));

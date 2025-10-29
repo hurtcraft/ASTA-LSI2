@@ -17,5 +17,7 @@ public interface ApprentiRepository extends JpaRepository<Apprenti, Long> {
 	boolean existsByApprentiEmail(String email);
 	Optional<Apprenti> findByApprentiEmail(String username);
 	List<Apprenti> findApprentisByApprentiName(String name);
+	List<Apprenti> findByApprentiNameStartingWithIgnoreCase(String prefix);
 	List<Apprenti> findApprentisByEntrepriseRaisonSociale(String entrepriseRaisonSociale);
+	List<Apprenti> findByEntrepriseRaisonSocialeStartingWithIgnoreCase(String prefix);
 }

@@ -16,13 +16,15 @@ public class SearchService {
     }
 
     public List<Apprenti> findByApprentiName(String apprentiName) {
-        return apprentiService.findByApprentiName(apprentiName);
+        // Perform case-insensitive "starts with" search so typing "so" matches "Sopra", "Sopra Steria", etc.
+        return apprentiService.findByApprentiNameStartingWithIgnoreCase(apprentiName);
     }
     public List<Apprenti> findApprentiByMissionMotCleContaining(String motCle) {
         return missionService.findApprentisByMotCleContainingIgnoreCase(motCle);
     }
     public List<Apprenti> findByEntrepriseName(String entrepriseName) {
-        return apprentiService.findByApprentiEntrepriseRaisonSociale(entrepriseName);
+        // Case-insensitive prefix match on entreprise raison sociale
+        return apprentiService.findByEntrepriseRaisonSocialeStartingWithIgnoreCase(entrepriseName);
     }
     public List<Apprenti> findByAnne(int anne) {
         return apprentiService.findByAnne(anne);
