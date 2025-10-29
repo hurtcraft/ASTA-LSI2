@@ -8,8 +8,8 @@
 ### 1.1 Via le site
 https://content-commitment-production-a926.up.railway.app/login
 
-**Login :** toto@gmail.com
-**Mot de passe :** A mettre
+**Login :** admin@gmail.com
+**Mot de passe :** admin
 
 ---
 
@@ -47,7 +47,7 @@ La base de donnée se configure automatiquement via hibernate après avoir entr�
 
 
 
-### 3.4. Accès à l'application
+### 3.4. Accès à l'application en local
 
 - **Interface web :** http://localhost:8080
 - **Documentation API (Swagger) :** http://localhost:8080/swagger-ui/index.html
