@@ -15,6 +15,7 @@ https://content-commitment-production-a926.up.railway.app/login
 - Placez-vous dans la racine du projet (où il y a le docker compose).
 - Lancer la commande **docker compose up --build**
 - Accès via http://localhost:8080/
+- Un jeu de test est disponible dans ressources/data.sql
 - Inscrire un nouveau tuteur et se connecter
 - Pour relancer supprimer la container et les volumes via la commande **docker compose down -v**
 
