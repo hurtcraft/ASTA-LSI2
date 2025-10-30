@@ -3,6 +3,7 @@ package client.asta_lsi2.service;
 
 import client.asta_lsi2.models.MaitreApprentissage;
 import client.asta_lsi2.repository.MaitreApprentissageRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ public class MaitreApprentissageService {
         this.passwordEncoder = passwordEncoder;
     }
 
-
+    @Transactional
     public void save(MaitreApprentissage maitreApprentissage) {
         if (maitreApprentissage.getPassword() != null && !maitreApprentissage.getPassword().isBlank()) {
             maitreApprentissage.setPassword(passwordEncoder.encode(maitreApprentissage.getPassword()));

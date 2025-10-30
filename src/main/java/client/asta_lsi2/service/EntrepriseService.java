@@ -2,6 +2,7 @@ package client.asta_lsi2.service;
 
 import client.asta_lsi2.models.Entreprise;
 import client.asta_lsi2.repository.EntrepriseRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class EntrepriseService {
     public Optional<Entreprise> findById(Long id) {
         return entrepriseRepository.findById(id);
     }
-
+    @Transactional
     public Entreprise save(Entreprise entreprise) {
         return entrepriseRepository.save(entreprise);
     }

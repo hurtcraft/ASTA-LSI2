@@ -2,6 +2,7 @@ package client.asta_lsi2.service;
 
 import client.asta_lsi2.models.Apprenti;
 import client.asta_lsi2.repository.ApprentiRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.Year;
@@ -28,6 +29,7 @@ public class ApprentiService {
 	public Optional<Apprenti> findApprentiByEmail(String email) {
 		return apprentiRepository.findByApprentiEmail(email);
 	}
+	@Transactional
 	public void save(Apprenti apprenti) {
 		apprentiRepository.save(apprenti);
 	}
@@ -55,7 +57,7 @@ public class ApprentiService {
 	public List<Apprenti> findAll() {
 		return apprentiRepository.findAll();
 	}
-	
+	@Transactional
 	public void deleteById(Long id) {
 		apprentiRepository.deleteById(id);
 	}
