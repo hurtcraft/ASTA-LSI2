@@ -11,7 +11,7 @@ https://content-commitment-production-a926.up.railway.app/login
 **Mot de passe :** admin
 
 ### Via docker (local)
-
+- Cloner le depot : https://github.com/hurtcraft/ASTA-LSI2
 - Placez-vous dans la racine du projet (où il y a le docker compose).
 - Lancer la commande **docker compose up --build**
 - Accès via http://localhost:8080/
