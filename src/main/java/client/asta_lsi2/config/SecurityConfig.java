@@ -27,6 +27,12 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
         .csrf(csrf -> csrf.disable())
         // Autorisations (ici tout est accessible; affiner selon les rôles si besoin)
         .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers(
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**",
+                        "/swagger-resources/**",
+                        "/webjars/**"
+                ).permitAll()// pour test du swagger
                 .requestMatchers("/","/login","/register/**","/logout","/api/register/tuteurEnseignant").permitAll()
                 .requestMatchers( "/api/**","/dashboard/**","/**").hasRole(Role.TUTEUR_ENSEIGNANT.name())
             .anyRequest().authenticated()
