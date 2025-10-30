@@ -2,10 +2,10 @@
 - Lucas Vong
 - Patrick Wu
 - Julien Weng
-## Lancement
 
 ## Lancement 
 ### Via le site (URL)
+Déploiement via railway
 https://content-commitment-production-a926.up.railway.app/login
 **Login :** admin@gmail.com
 **Mot de passe :** admin
@@ -57,6 +57,3 @@ Une page unique pour gérer les apprentis (liste, recherche, détails en popup, 
 
 ## Documentation swagger
 - http://localhost:8080/swagger-ui/index.html#/
-
-## Deploiement
-- https://content-commitment-production-a926.up.railway.app/majeurs
