@@ -3,6 +3,21 @@
 - Patrick Wu
 - Julien Weng
 
+## Lancement 
+### Via le site (URL)
+Déploiement via railway
+https://content-commitment-production-a926.up.railway.app/login
+**Login :** admin@gmail.com
+**Mot de passe :** admin
+
+### Via docker (local)
+
+- Placez-vous dans la racine du projet (où il y a le docker compose).
+- Lancer la commande **docker compose up --build**
+- Accès via http://localhost:8080/
+- Inscrire un nouveau tuteur et se connecter
+- Pour relancer supprimer la container et les volumes via la commande **docker compose down -v**
+
 ## Dashboard 
 
 Une page unique pour gérer les apprentis (liste, recherche, détails en popup, CRUD) sans rechargement complet.
