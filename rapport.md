@@ -134,6 +134,10 @@ Si vous utilisez docker, celui-ci importera automatiquement des données de test
 - **Patrick Wu :** 
 
 - Implémentation de l'architecture global du site, frontend
+- Ajout des apprentis et son formulaire d'ajout
+- Possibilité de gérer des majeurs
+- Possibilité de changer d'année, met à jour automatiquement les apprentis et leur programme.
+- Possibilité de voir les archives avec tous les élèves qui ne sont plus apprentis.
 
 - **Julien Weng :**
 
