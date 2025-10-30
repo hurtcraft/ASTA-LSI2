@@ -57,3 +57,6 @@ Une page unique pour gérer les apprentis (liste, recherche, détails en popup, 
 
 ## Documentation swagger
 - http://localhost:8080/swagger-ui/index.html#/
+
+## Deploiement
+- https://content-commitment-production-a926.up.railway.app/majeurs
